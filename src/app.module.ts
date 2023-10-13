@@ -12,11 +12,11 @@ import { APP_GUARD } from '@nestjs/core';
     HttpModule,
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // Rate Limit : 100 requêtes par minute
+    // Rate Limit : 50 requêtes par minute
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
-        limit: 100,
+        limit: 50,
       },
     ]),
   ],
