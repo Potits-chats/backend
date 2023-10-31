@@ -2,3 +2,13 @@ version: "1"
 services:
   services_potits_chats_back:
     image: potit_back
+    networks:
+      - potits_chats
+  services_potits_chats_front:
+    image: potit_front
+    networks:
+      - potits_chats
+
+networks:
+  potits_chats:
+    driver: bridge
