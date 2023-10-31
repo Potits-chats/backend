@@ -2,6 +2,7 @@ import { Logger, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 const PORT = process.env.PORT || 3000;
 const VERSION = process.env.VERSION || 'v1';
@@ -31,6 +32,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(`${VERSION}/swagger`, app, document);
+
+  // Helmet
+  app.use(helmet());
 
   // Lancement du serveur
   await app.listen(PORT, () => {});
