@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,8 +7,111 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model Chats {
+  id                   Int           @id @default(autoincrement())
+  nom                  String
+  age                  Int
+  automatiqueAnnonce   Boolean       @default(false)
+  description          String        @db.Text
+  race                 String?
+  annonceUrl           String?
+  sterilise            Boolean?
+  vaccinations         String?
+  adopte               Boolean       @default(false)
+  histoire             String?
+  type                 String        @default("Européen")
+  sexe                 Sexe
+  couleur              String        @default("Tigré")
+  taille               Taille        @default(MOYEN)
+  ententeChien         Boolean?
+  ententeChat          Boolean?
+  ententeEnfant        Boolean?
+  typeFoyerMaison      Boolean?
+  typeFoyerAppartement Boolean?
+  contactEmail         String?
+  contactTel           String?
+  contactUrl           String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  associationId        Int?
+  association          Associations? @relation(fields: [associationId], references: [id])
+  favoris              Favoris[]
+  photos               Photos[]
+  videos               Videos[]
+
+  @@index([associationId], map: "Chats_associationId_fkey")
+}
+
+model Photos {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  url       String
+  chatId    Int
+  chat      Chats    @relation(fields: [chatId], references: [id])
+
+  @@index([chatId], map: "Photos_chatId_fkey")
+}
+
+model Videos {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  url       String
+  chatId    Int
+  chat      Chats    @relation(fields: [chatId], references: [id])
+
+  @@index([chatId], map: "Videos_chatId_fkey")
+}
+
+model Utilisateurs {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  hash          String
+  adresse       String?
+  ville         String?
+  codePostal    String?
+  telephone     String?
+  nom           String?
+  prenom        String?
+  role          Role          @default(ADOPTANT)
+  associationId Int?
+  favoris       Favoris[]
+  association   Associations? @relation(fields: [associationId], references: [id])
+
+  @@index([associationId], map: "Utilisateurs_associationId_fkey")
+}
+
+model Associations {
+  id           Int            @id @default(autoincrement())
+  nom          String         @unique
+  chats        Chats[]
+  utilisateurs Utilisateurs[]
+}
+
+model Favoris {
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now())
+  chatId        Int
+  utilisateurId Int
+  chat          Chats        @relation(fields: [chatId], references: [id])
+  utilisateur   Utilisateurs @relation(fields: [utilisateurId], references: [id])
+
+  @@index([chatId], map: "Favoris_chatId_fkey")
+  @@index([utilisateurId], map: "Favoris_utilisateurId_fkey")
+}
+
+enum Role {
+  ASSOCIATION
+  ADOPTANT
+  ADMINISTRATEUR
+}
+
+enum Sexe {
+  FEMELLE
+  MALE
+}
+
+enum Taille {
+  PETIT
+  MOYEN
+  GRAND
 }

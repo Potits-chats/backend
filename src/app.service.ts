@@ -7,11 +7,7 @@ export class AppService {
   private readonly logger = new Logger(AppService.name);
 
   async getHello(): Promise<any> {
-    const toto = {
-      id: 1,
-      email: 'toto@gmail.com',
-      name: 'toto',
-    };
-    return toto;
+    const result = await this.prisma.chats.findMany();
+    return result;
   }
 }

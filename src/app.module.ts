@@ -6,6 +6,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
   imports: [
@@ -19,6 +20,8 @@ import { APP_GUARD } from '@nestjs/core';
         limit: 50,
       },
     ]),
+
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [
