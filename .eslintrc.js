@@ -1,3 +1,5 @@
+const security = require('eslint-plugin-security');
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -5,10 +7,11 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'security', 'eslint-plugin-security'], // added 'eslint-plugin-security'
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
+    'plugin:security/recommended'
   ],
   root: true,
   env: {
@@ -21,8 +24,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    "prettier/prettier": ["error", {
-      "endOfLine": "auto"
-    }]
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
   },
 };
