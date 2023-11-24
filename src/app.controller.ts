@@ -28,11 +28,11 @@ export class AppController {
   @ApiTags('auth')
   @Get('token')
   getToken() {
-    return this.authService.signIn('john', 'changeme');
+    return this.authService.signIn('utilisateur1@example.com', '1234');
   }
 
   @ApiOperation({ summary: 'Route de test : auth + admin' })
-  @HasRoles(Role.Admin)
+  @HasRoles(Role.Administrateur)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiTags('auth')
   @ApiBearerAuth()

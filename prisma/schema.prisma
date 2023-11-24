@@ -72,7 +72,8 @@ model Utilisateurs {
   telephone     String?
   nom           String?
   prenom        String?
-  role          Role          @default(ADOPTANT)
+  password      String?
+  role          Role          @default(USER)
   associationId Int?
   favoris       Favoris[]
   association   Associations? @relation(fields: [associationId], references: [id])
@@ -100,9 +101,9 @@ model Favoris {
 }
 
 enum Role {
+  ADMIN
+  USER
   ASSOCIATION
-  ADOPTANT
-  ADMINISTRATEUR
 }
 
 enum Sexe {
