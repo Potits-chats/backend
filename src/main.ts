@@ -29,6 +29,14 @@ async function bootstrap() {
     .setTitle('API Potits Chats')
     .setDescription('Documentation Swagger API Potits Chats')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: 'Enter JWT token',
+      in: 'header',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(`${VERSION}/swagger`, app, document);

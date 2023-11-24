@@ -7,6 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ChatsModule } from './chats/chats.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { DevMiddleware } from './utils/dev.middleware';
 
 @Module({
   imports: [
@@ -22,6 +25,10 @@ import { ChatsModule } from './chats/chats.module';
     ]),
 
     ChatsModule,
+
+    AuthModule,
+
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [
@@ -35,6 +42,9 @@ import { ChatsModule } from './chats/chats.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    if (process.env.NODE_ENV === 'development') {
+      consumer.apply(DevMiddleware).forRoutes('*');
+    }
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }
