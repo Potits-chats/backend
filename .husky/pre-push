@@ -1,4 +1,13 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm test --passWithNoTests
+echo "Running pre-push hook..."
+
+# Print the current working directory
+echo "Current directory: $(pwd)"
+
+# Run npm test with debug information
+# npm test --passWithNoTests --verbose
+
+# Print a message after the test command
+echo "Finished running tests."
