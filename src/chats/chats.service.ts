@@ -7,29 +7,31 @@ export class ChatsService {
   private readonly logger = new Logger(ChatsService.name);
 
   async findAll(options: {
-    associationName?: string;
+    associationId?: number;
     take?: number;
     skip?: number;
   }) {
-    const { associationName, take, skip } = options;
+    const { associationId, take, skip } = options;
 
     let query = {
       include: {
         photos: true,
         association: true,
       },
-      where: {},
+      where: {
+        isVisible: true,
+      },
     };
-
-    if (associationName) {
+    if (associationId) {
       query = {
         ...query,
         where: {
+          ...query.where,
           association: {
-            name: associationName,
+            id: associationId,
           },
         },
-      };
+      } as typeof query & { where: { association: { id: number } } };
     }
 
     if (take) {
@@ -50,9 +52,6 @@ export class ChatsService {
       ...query,
       orderBy: {
         id: 'desc', // Sort chats by id in descending order
-      },
-      where: {
-        isVisible: true, // Add the isVisible filter
       },
     });
 
