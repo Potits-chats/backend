@@ -1,7 +1,8 @@
 import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
 import { ChatsService } from './chats.service';
-import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('chats')
 @Controller('chats')
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}

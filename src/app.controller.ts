@@ -6,6 +6,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 import { AuthService } from './auth/auth.service';
 
+@ApiTags('Home')
 @Controller()
 export class AppController {
   constructor(
