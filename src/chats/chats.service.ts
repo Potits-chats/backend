@@ -6,22 +6,52 @@ export class ChatsService {
   prisma = new PrismaClient();
   private readonly logger = new Logger(ChatsService.name);
 
-  async findAll() {
-    const chats = this.prisma.chats.findMany({
+  async findAll(options: {
+    associationName?: string;
+    take?: number;
+    skip?: number;
+  }) {
+    const { associationName, take, skip } = options;
+
+    let query = {
       include: {
         photos: true,
         association: true,
       },
-    });
+      where: {},
+    };
 
-    // Truncate the size of the description for each chat
-    const truncatedChats = (await chats).map((chat) => {
-      // Adjust the desired length for the truncated description
+    if (associationName) {
+      query = {
+        ...query,
+        where: {
+          association: {
+            name: associationName,
+          },
+        },
+      };
+    }
+
+    if (take) {
+      query = {
+        ...query,
+        take,
+      } as typeof query & { take: number };
+    }
+
+    if (skip) {
+      query = {
+        ...query,
+        skip,
+      } as typeof query & { skip: number };
+    }
+
+    const chats = await this.prisma.chats.findMany(query);
+
+    const truncatedChats = chats.map((chat) => {
       const maxDescriptionLength = 130;
 
-      // Check if the description length exceeds the maximum length
       if (chat.description && chat.description.length > maxDescriptionLength) {
-        // Truncate the description and append '...' at the end
         chat.description =
           chat.description.slice(0, maxDescriptionLength) + '...';
       }

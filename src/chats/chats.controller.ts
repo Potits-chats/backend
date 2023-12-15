@@ -1,6 +1,6 @@
-import { Controller, Get, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
 import { ChatsService } from './chats.service';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 
 @Controller('chats')
 export class ChatsController {
@@ -12,9 +12,23 @@ export class ChatsController {
   // }
 
   @ApiOperation({ summary: 'Récupération de tous les chats' })
+  @ApiQuery({
+    name: 'associationName',
+    required: false,
+    description: "Nom de l'association pour filtrer les chats",
+  })
   @Get()
-  findAll() {
-    return this.chatsService.findAll();
+  findAll(
+    @Query('associationName') associationName?: string,
+    @Query('take') take: number = 10,
+    @Query('skip') skip: number = 0,
+  ) {
+    take > 10 ? (take = 10) : take;
+    return this.chatsService.findAll({
+      associationName,
+      take,
+      skip,
+    });
   }
 
   @ApiOperation({ summary: "Récupération d'un chat par son id" })
