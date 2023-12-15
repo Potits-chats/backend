@@ -34,6 +34,7 @@ model Chats {
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
   associationId        Int?
+  isVisible            Boolean       @default(true)
   association          Associations? @relation(fields: [associationId], references: [id])
   favoris              Favoris[]
   photos               Photos[]
@@ -72,9 +73,9 @@ model Utilisateurs {
   telephone     String?
   nom           String?
   prenom        String?
-  password      String?
-  role          Role          @default(USER)
   associationId Int?
+  role          Role          @default(USER)
+  password      String?
   favoris       Favoris[]
   association   Associations? @relation(fields: [associationId], references: [id])
 
@@ -84,6 +85,11 @@ model Utilisateurs {
 model Associations {
   id           Int            @id @default(autoincrement())
   nom          String         @unique
+  url          String?        @db.VarChar(50)
+  ville        String         @db.VarChar(50)
+  urlImage     String?        @db.VarChar(255)
+  description  String?        @db.Text
+  tel          String?        @db.VarChar(50)
   chats        Chats[]
   utilisateurs Utilisateurs[]
 }

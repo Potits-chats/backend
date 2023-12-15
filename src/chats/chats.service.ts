@@ -46,7 +46,15 @@ export class ChatsService {
       } as typeof query & { skip: number };
     }
 
-    const chats = await this.prisma.chats.findMany(query);
+    const chats = await this.prisma.chats.findMany({
+      ...query,
+      orderBy: {
+        id: 'desc', // Sort chats by id in descending order
+      },
+      where: {
+        isVisible: true, // Add the isVisible filter
+      },
+    });
 
     const truncatedChats = chats.map((chat) => {
       const maxDescriptionLength = 130;
@@ -66,6 +74,7 @@ export class ChatsService {
     const chat = await this.prisma.chats.findUnique({
       where: {
         id: id,
+        isVisible: true,
       },
       include: {
         photos: true,

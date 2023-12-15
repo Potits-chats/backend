@@ -17,13 +17,24 @@ export class ChatsController {
     required: false,
     description: "Nom de l'association pour filtrer les chats",
   })
+  @ApiQuery({
+    name: 'take',
+    required: false,
+    description: 'Nombre de chats à récupérer',
+  })
+  @ApiQuery({
+    name: 'skip',
+    required: false,
+    description: 'Nombre de chats à sauter',
+  })
   @Get()
   findAll(
     @Query('associationName') associationName?: string,
-    @Query('take') take: number = 10,
-    @Query('skip') skip: number = 0,
+    @Query('take') take?: number,
+    @Query('skip') skip?: number,
   ) {
-    take > 10 ? (take = 10) : take;
+    take = take || 10;
+    skip = skip || 0;
     return this.chatsService.findAll({
       associationName,
       take,
