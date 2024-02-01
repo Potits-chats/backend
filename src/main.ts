@@ -68,4 +68,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-console.log('bravo!!');
