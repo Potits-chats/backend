@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Chats, PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class ChatsService {
@@ -86,8 +86,21 @@ export class ChatsService {
     return chat;
   }
 
-  update(id: number) {
-    return `This action updates a #${id} chat`;
+  async update(id: number, updateChatDto: Chats) {
+    delete updateChatDto.id;
+    delete updateChatDto.associationId;
+    delete updateChatDto['association'];
+    delete updateChatDto['photos'];
+    delete updateChatDto['userId'];
+    const chats = await this.prisma.chats.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ...updateChatDto,
+      },
+    });
+    return chats;
   }
 
   remove(id: number) {

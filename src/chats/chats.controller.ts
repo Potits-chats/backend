@@ -1,6 +1,15 @@
-import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Delete,
+  Query,
+  Put,
+  Body,
+} from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Chats } from '@prisma/client';
 
 @ApiTags('chats')
 @Controller('chats')
@@ -56,10 +65,10 @@ export class ChatsController {
     return this.chatsService.findOne(+id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-  //   return this.chatsService.update(+id, updateChatDto);
-  // }
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateChat: Chats) {
+    return this.chatsService.update(+id, updateChat);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
