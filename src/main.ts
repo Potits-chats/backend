@@ -13,7 +13,7 @@ async function bootstrap() {
   });
 
   // Activer le CORS
-  app.enableCors();
+  // app.enableCors();
 
   // Activer le versioning URL
   app.setGlobalPrefix(VERSION);
