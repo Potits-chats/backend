@@ -44,9 +44,10 @@ async function bootstrap() {
   // Activer le CORS
   app.enableCors({
     origin: [
-      'http://localhost:3000',
-      'https://potits-chats.vercel.app/',
-      'http://localhost:4200',
+      '*',
+      // 'http://localhost:3000',
+      // 'https://potits-chats.vercel.app/',
+      // 'http://localhost:4200',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
