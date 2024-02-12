@@ -42,16 +42,17 @@ async function bootstrap() {
   app.use(helmet());
 
   // Activer le CORS
-  app.enableCors({
-    origin: [
-      '*',
-      // 'http://localhost:3000',
-      // 'https://potits-chats.vercel.app/',
-      // 'http://localhost:4200',
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    credentials: true,
-  });
+  app.enableCors();
+  // app.enableCors({
+  //   origin: [
+  //     '*',
+  //     // 'http://localhost:3000',
+  //     // 'https://potits-chats.vercel.app/',
+  //     // 'http://localhost:4200',
+  //   ],
+  //   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  //   credentials: true,
+  // });
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
