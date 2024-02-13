@@ -17,6 +17,9 @@ export class ChatsService {
       include: {
         photos: true,
         association: true,
+        favoris: {
+          where: { utilisateurId: 1 }, // TODO CHANGER PAR L'ID DE L'UTILISATEUR CONNECTE
+        },
       },
       where: {
         isVisible: true,
