@@ -18,7 +18,13 @@
       }
     ],
     "rewrites": [
-      { "source": "/v1/", "destination": "https://potits-chats-back.vercel.app/v1"}
+      { "source": "/v1/", "destination": "https://potits-chats-back.vercel.app/v1"},
+      { "source": "/profil", "destination": "https://potits-chats-back.vercel.app/v1/profil"},
+      { "source": "/connexion", "destination": "https://potits-chats-back.vercel.app/v1/connexion"},
+      { "source": "/inscription", "destination": "https://potits-chats-back.vercel.app/v1/inscription"},
+      { "source": "/contact", "destination": "https://potits-chats-back.vercel.app/v1/contact"},
+      { "source": "/animaux", "destination": "https://potits-chats-back.vercel.app/v1/animaux"},
+      { "source": "/", "destination": "https://potits-chats-back.vercel.app/v1"}
     ],
     "redirects": [
       { "source": "/profil", "destination": "https://potits-chats.vercel.app/v1/profil", "permanent": true},
