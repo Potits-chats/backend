@@ -10,6 +10,7 @@ import { ChatsModule } from './chats/chats.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DevMiddleware } from './utils/dev.middleware';
+import { FavorisModule } from './favoris/favoris.module';
 
 @Module({
   imports: [
@@ -29,6 +30,8 @@ import { DevMiddleware } from './utils/dev.middleware';
     AuthModule,
 
     UsersModule,
+
+    FavorisModule,
   ],
   controllers: [AppController],
   providers: [
