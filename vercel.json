@@ -21,12 +21,12 @@
       { "source": "/v1/", "destination": "https://potits-chats.vercel.app/v1"}
     ],
     "redirects": [
-      { "source": "/profil", "destination": "https://potits-chats.vercel.app/v1/profil", "permanent": "true"},
-      { "source": "/connexion", "destination": "https://potits-chats.vercel.app/v1/connexion", "permanent": "true"},
-      { "source": "/inscription", "destination": "https://potits-chats.vercel.app/v1/inscription", "permanent": "true"},
-      { "source": "/contact", "destination": "https://potits-chats.vercel.app/v1/contact", "permanent": "true"},
-      { "source": "/animaux", "destination": "https://potits-chats.vercel.app/v1/animaux", "permanent": "true"},
-      { "source": "/", "destination": "https://potits-chats.vercel.app/v1", "permanent": "true"}
+      { "source": "/profil", "destination": "https://potits-chats.vercel.app/v1/profil", "permanent": true},
+      { "source": "/connexion", "destination": "https://potits-chats.vercel.app/v1/connexion", "permanent": true},
+      { "source": "/inscription", "destination": "https://potits-chats.vercel.app/v1/inscription", "permanent": true},
+      { "source": "/contact", "destination": "https://potits-chats.vercel.app/v1/contact", "permanent": true},
+      { "source": "/animaux", "destination": "https://potits-chats.vercel.app/v1/animaux", "permanent": true},
+      { "source": "/", "destination": "https://potits-chats.vercel.app/v1", "permanent": true}
     ],
     "cleanUrls": true,
     "trailingSlash": false
