@@ -6,10 +6,22 @@ import {
   Query,
   Put,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { ChatsService } from './chats.service';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Chats } from '@prisma/client';
+// import { AuthGuard } from '@nestjs/passport';
+// import { PermissionsGuard } from '../authorization/permissions.guard';
+// import { Permissions } from '../authorization/permissions.decorator';
+import { AuthorizationGuard } from '../authorization/authorization.guard';
+import { PermissionsGuard } from '../authorization/permissions.guard';
+import { PermissionsEnum } from '../authorization/permissions';
 
 @ApiTags('chats')
 @Controller('chats')
@@ -22,6 +34,9 @@ export class ChatsController {
   // }
 
   @ApiOperation({ summary: 'Récupération de tous les chats' })
+  @UseGuards(PermissionsGuard([PermissionsEnum.READ_CHATS]))
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
   @ApiQuery({
     name: 'associationId',
     required: false,

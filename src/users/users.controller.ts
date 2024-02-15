@@ -12,13 +12,13 @@ export class UsersController {
   //   return this.chatsService.create(createChatDto);
   // }
 
-  @ApiOperation({ summary: 'Récupération de tous les chats' })
+  @ApiOperation({ summary: 'Récupération de tous les utilisateurs' })
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
-  @ApiOperation({ summary: "Récupération d'un user par son id" })
+  @ApiOperation({ summary: "Récupération d'un utilisateur par son id" })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOneById(+id);

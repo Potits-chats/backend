@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ChatsModule } from './chats/chats.module';
-import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DevMiddleware } from './utils/dev.middleware';
 import { FavorisModule } from './favoris/favoris.module';
@@ -26,8 +25,6 @@ import { FavorisModule } from './favoris/favoris.module';
     ]),
 
     ChatsModule,
-
-    AuthModule,
 
     UsersModule,
 
