@@ -41,6 +41,7 @@
     "@nestjs/swagger": "^7.1.13",
     "@nestjs/throttler": "^5.0.0",
     "@prisma/client": "^5.4.2",
+    "@vercel/postgres": "^0.7.2",
     "axios": "^1.6.2",
     "helmet": "^7.0.0",
     "reflect-metadata": "^0.1.13",
