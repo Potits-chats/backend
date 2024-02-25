@@ -8,7 +8,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ChatsModule } from './chats/chats.module';
 import { UsersModule } from './users/users.module';
-import { DevMiddleware } from './utils/dev.middleware';
 import { FavorisModule } from './favoris/favoris.module';
 
 @Module({
@@ -42,9 +41,6 @@ import { FavorisModule } from './favoris/favoris.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    if (process.env.NODE_ENV === 'development') {
-      consumer.apply(DevMiddleware).forRoutes('*');
-    }
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

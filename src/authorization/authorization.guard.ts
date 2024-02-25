@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   InternalServerErrorException,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -15,12 +16,15 @@ import { promisify } from 'util';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
+  private readonly logger = new Logger(AuthorizationGuard.name);
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     if (!request.headers.authorization) {
-      console.log(' No token !');
+      this.logger.error('No token !');
+    } else {
+      this.logger.debug('Token : ' + request.headers.authorization);
     }
-    // console.log(' Token :', request.headers.authorization);
     const response = context.switchToHttp().getResponse<Response>();
 
     const validateAccessToken = promisify(auth());

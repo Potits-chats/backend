@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Chats, PrismaClient } from '@prisma/client';
+import * as cheerio from 'cheerio';
 
 @Injectable()
 export class ChatsService {
@@ -58,17 +59,16 @@ export class ChatsService {
       },
     });
 
-    const truncatedChats = chats.map((chat) => {
+    const truncatedChats = chats.map((chat: Chats) => {
       const maxDescriptionLength = 130;
 
       if (chat.description && chat.description.length > maxDescriptionLength) {
-        chat.description =
-          chat.description.slice(0, maxDescriptionLength) + '...';
+        const $ = cheerio.load(chat.description);
+        const textWithoutHtml = $.text().slice(0, maxDescriptionLength) + '...';
+        chat.description = textWithoutHtml;
       }
-
       return chat;
     });
-
     return truncatedChats;
   }
 
