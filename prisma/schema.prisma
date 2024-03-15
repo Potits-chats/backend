@@ -4,8 +4,11 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  // provider = "mysql"
+  // url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Chats {
@@ -36,7 +39,7 @@ model Chats {
   updatedAt            DateTime      @updatedAt
   associationId        Int?
   isVisible            Boolean       @default(true)
-  association          Associations? @relation(fields: [associationId], references: [id])
+  association          Associations? @relation(fields: [associationId], references: [id], map: "Chats_Association_FK")
   favoris              Favoris[]
   photos               Photos[]
   videos               Videos[]
@@ -49,7 +52,7 @@ model Photos {
   createdAt DateTime @default(now())
   url       String
   chatId    Int
-  chat      Chats    @relation(fields: [chatId], references: [id])
+  chat      Chats    @relation(fields: [chatId], references: [id], map: "Photos_Chats_FK")
 
   @@index([chatId], map: "Photos_chatId_fkey")
 }
@@ -59,7 +62,7 @@ model Videos {
   createdAt DateTime @default(now())
   url       String
   chatId    Int
-  chat      Chats    @relation(fields: [chatId], references: [id])
+  chat      Chats    @relation(fields: [chatId], references: [id], map: "Videos_Chats_FK")
 
   @@index([chatId], map: "Videos_chatId_fkey")
 }
@@ -78,7 +81,7 @@ model Utilisateurs {
   role          Role          @default(USER)
   password      String?
   favoris       Favoris[]
-  association   Associations? @relation(fields: [associationId], references: [id])
+  association   Associations? @relation(fields: [associationId], references: [id], map: "Utilisateurs_Associations_FK")
 
   @@index([associationId], map: "Utilisateurs_associationId_fkey")
 }
@@ -100,8 +103,8 @@ model Favoris {
   createdAt     DateTime     @default(now())
   chatId        Int
   utilisateurId Int
-  chat          Chats        @relation(fields: [chatId], references: [id])
-  utilisateur   Utilisateurs @relation(fields: [utilisateurId], references: [id])
+  chat          Chats        @relation(fields: [chatId], references: [id], map: "Favoris_Chats_FK")
+  utilisateur   Utilisateurs @relation(fields: [utilisateurId], references: [id], map: "Favoris_Utilisateurs_FK")
 
   @@index([chatId], map: "Favoris_chatId_fkey")
   @@index([utilisateurId], map: "Favoris_utilisateurId_fkey")
