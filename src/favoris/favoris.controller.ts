@@ -11,8 +11,9 @@ import { FavorisService } from './favoris.service';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('favoris')
 @Controller('favoris')
 export class FavorisController {
   constructor(private readonly favorisService: FavorisService) {}

@@ -9,6 +9,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { ChatsModule } from './chats/chats.module';
 import { UsersModule } from './users/users.module';
 import { FavorisModule } from './favoris/favoris.module';
+import { ChatGateway } from './chat/chat.gateway';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
   imports: [
@@ -22,12 +24,10 @@ import { FavorisModule } from './favoris/favoris.module';
         limit: 50,
       },
     ]),
-
     ChatsModule,
-
     UsersModule,
-
     FavorisModule,
+    ConversationsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -37,6 +37,7 @@ import { FavorisModule } from './favoris/favoris.module';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    ChatGateway,
   ],
 })
 export class AppModule implements NestModule {
