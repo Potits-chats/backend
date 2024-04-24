@@ -46,4 +46,14 @@ export class UsersService {
   async findAll(): Promise<User | undefined> {
     return this.prisma.utilisateurs.findMany();
   }
+
+  async create(createUserDto: any): Promise<User> {
+    this.logger.log(`createUserDto: ${JSON.stringify(createUserDto)}`);
+    return this.prisma.utilisateurs.create({
+      data: {
+        email: createUserDto.email,
+        userId: createUserDto.userId,
+      },
+    });
+  }
 }
