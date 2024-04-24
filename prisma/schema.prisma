@@ -6,8 +6,8 @@ generator client {
 datasource db {
   // provider = "mysql"
   // url      = env("DATABASE_URL")
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
@@ -70,11 +70,12 @@ model Videos {
 model Utilisateurs {
   id            Int             @id @default(autoincrement())
   email         String          @unique
-  userId       String          @unique
+  userId        String          @unique
   associationId Int?
   Conversations Conversations[]
   favoris       Favoris[]
-  association   Associations? @relation(fields: [associationId], references: [id], map: "Utilisateurs_Associations_FK")
+  association   Associations?   @relation(fields: [associationId], references: [id], map: "Utilisateurs_Associations_FK")
+  Messages      Messages[]
 
   @@index([associationId], map: "Utilisateurs_associationId_fkey")
 }
@@ -110,11 +111,11 @@ model Messages {
   createdAt       DateTime      @default(now())
   utilisateursId  Int
   conversationsId Int
-  conversation    Conversations @relation(fields: [conversationsId], references: [id])
-  auteur          Utilisateurs  @relation(fields: [utilisateursId], references: [id])
+  conversation    Conversations @relation(fields: [conversationsId], references: [id], map: "Messages_Conversation_FK")
+  auteur          Utilisateurs  @relation(fields: [utilisateursId], references: [id], map: "Messages_Auteur_FK")
 
-  @@index([conversationsId], map: "Messages_conversationsId_fkey")
-  @@index([utilisateursId], map: "Messages_utilisateursId_fkey")
+  @@index([conversationsId], map: "Index_ConversationId")
+  @@index([utilisateursId], map: "Index_UtilisateursId")
 }
 
 model Conversations {
