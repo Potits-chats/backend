@@ -1,5 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -7,18 +7,28 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Post()
-  // create(@Body() createChatDto: CreateChatDto) {
-  //   return this.chatsService.create(createChatDto);
-  // }
+  @ApiOperation({ summary: "Création d'un utilisateur" })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string' },
+        userId: { type: 'string' },
+      },
+    },
+  })
+  @Post()
+  create(@Body() createChatDto: any) {
+    return this.usersService.create(createChatDto);
+  }
 
-  @ApiOperation({ summary: 'Récupération de tous les chats' })
+  @ApiOperation({ summary: 'Récupération de tous les utilisateurs' })
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
-  @ApiOperation({ summary: "Récupération d'un user par son id" })
+  @ApiOperation({ summary: "Récupération d'un utilisateur par son id" })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOneById(+id);
