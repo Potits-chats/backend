@@ -9,8 +9,6 @@ import {
 } from '@nestjs/common';
 import { FavorisService } from './favoris.service';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
-import { PermissionsGuard } from '../authorization/permissions.guard';
-import { PermissionsEnum } from '../authorization/permissions';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('favoris')
