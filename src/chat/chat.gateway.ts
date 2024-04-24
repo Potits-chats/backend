@@ -7,7 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { ConversationsService } from '../conversations/conversations.service';
-import { data } from 'cheerio/lib/api/attributes';
+import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -15,8 +15,8 @@ import { data } from 'cheerio/lib/api/attributes';
   },
 })
 export class ChatGateway {
-  @WebSocketServer()
-  server;
+  @WebSocketServer() // Add { noServer: true } here
+  server: Server;
 
   constructor(private readonly conversationsService: ConversationsService) {}
 
@@ -40,7 +40,7 @@ export class ChatGateway {
   @SubscribeMessage('message')
   handleMessage(
     @MessageBody() data: { room: string; message: string },
-    @ConnectedSocket() client: Socket,
+    // @ConnectedSocket() client: Socket,
   ) {
     this.server.to(data.room).emit('message', data.message);
   }

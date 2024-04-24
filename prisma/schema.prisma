@@ -67,21 +67,12 @@ model Videos {
 model Utilisateurs {
   id            Int             @id @default(autoincrement())
   email         String          @unique
-  hash          String
-  adresse       String?
-  ville         String?
-  codePostal    String?
-  telephone     String?
-  nom           String?
-  prenom        String?
+  userId       String          @unique
   associationId Int?
-  role          Role            @default(USER)
-  password      String?
   Conversations Conversations[]
   favoris       Favoris[]
   Messages      Messages[]
   association   Associations?   @relation(fields: [associationId], references: [id])
-
   @@index([associationId], map: "Utilisateurs_associationId_fkey")
 }
 
