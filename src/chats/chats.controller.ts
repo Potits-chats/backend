@@ -55,7 +55,6 @@ export class ChatsController {
     @Query('associationId') associationId?: number,
     @Query('take') take?: number,
     @Query('skip') skip?: number,
-    @User() user?: Utilisateurs,
   ) {
     take = Number(take) || 10;
     skip = Number(skip) || 0;
@@ -64,11 +63,20 @@ export class ChatsController {
     }
 
     return this.chatsService.findAll({
-      user,
       associationId,
       take,
       skip,
     });
+  }
+
+  @ApiOperation({
+    summary: "Récupération des chats favoris de l'utilisateur connecté",
+  })
+  @Get('/favoris')
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  findByFavoris(@User() user: Utilisateurs) {
+    return this.chatsService.findByFavoris(user);
   }
 
   @ApiOperation({ summary: "Récupération d'un chat par son id" })
@@ -77,6 +85,7 @@ export class ChatsController {
     return this.chatsService.findOne(+id);
   }
 
+  @ApiOperation({ summary: "Mise à jour d'un chat par son id" })
   @Put(':id')
   @UseGuards(PermissionsGuard([PermissionsEnum.UPDATE_CHAT]))
   @UseGuards(AuthorizationGuard)
@@ -85,6 +94,7 @@ export class ChatsController {
     return this.chatsService.update(+id, updateChat);
   }
 
+  @ApiOperation({ summary: "Suppression d'un chat par son id" })
   @Delete(':id')
   @UseGuards(PermissionsGuard([PermissionsEnum.DELETE_CHAT]))
   @UseGuards(AuthorizationGuard)

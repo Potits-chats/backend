@@ -8,12 +8,11 @@ export class ChatsService {
   private readonly logger = new Logger(ChatsService.name);
 
   async findAll(options: {
-    user?: Utilisateurs;
     associationId?: number;
     take?: number;
     skip?: number;
   }) {
-    const { user, associationId, take, skip } = options;
+    const { associationId, take, skip } = options;
 
     let query: any = {
       include: {
@@ -24,15 +23,6 @@ export class ChatsService {
         isVisible: true,
       },
     };
-
-    if (user) {
-      query.include = {
-        ...query.include,
-        favoris: {
-          where: { utilisateurId: user.id },
-        },
-      };
-    }
 
     if (associationId) {
       query = {
@@ -97,12 +87,40 @@ export class ChatsService {
     return chat;
   }
 
+  async findByFavoris(user: Utilisateurs) {
+    const chats = await this.prisma.chats.findMany({
+      where: {
+        favoris: {
+          some: {
+            utilisateurId: user.id,
+          },
+        },
+      },
+      include: {
+        photos: true,
+        association: true,
+      },
+    });
+    const truncatedChats = chats.map((chat: Chats) => {
+      const maxDescriptionLength = 130;
+
+      if (chat.description && chat.description.length > maxDescriptionLength) {
+        const $ = cheerio.load(chat.description);
+        const textWithoutHtml = $.text().slice(0, maxDescriptionLength) + '...';
+        chat.description = textWithoutHtml;
+      }
+      return chat;
+    });
+    return truncatedChats;
+  }
+
   async update(id: number, updateChatDto: Chats) {
     delete updateChatDto.id;
     delete updateChatDto.associationId;
     delete updateChatDto['association'];
     delete updateChatDto['photos'];
     delete updateChatDto['userId'];
+    delete updateChatDto['isFavori'];
     const chats = await this.prisma.chats.update({
       where: {
         id: id,

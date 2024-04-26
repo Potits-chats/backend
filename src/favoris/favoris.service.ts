@@ -26,15 +26,22 @@ export class FavorisService {
     return this.prisma.favoris.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.favoris.findUnique({
-      where: { id: id },
-    });
+  findByUser(user: Utilisateurs) {
+    return this.prisma.favoris
+      .findMany({
+        where: { utilisateurId: user.id },
+        select: { chatId: true },
+        distinct: ['chatId'],
+      })
+      .then((favoris) => favoris.map((favori) => favori.chatId));
   }
 
-  remove(id: number) {
-    return this.prisma.favoris.delete({
-      where: { id: id },
+  removeByCat(id: number, user: Utilisateurs) {
+    return this.prisma.favoris.deleteMany({
+      where: {
+        chatId: id,
+        utilisateurId: user.id,
+      },
     });
   }
 }
