@@ -10,6 +10,8 @@ import {
 import { FavorisService } from './favoris.service';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { User } from '../utils/user.decorator';
+import { Utilisateurs } from '@prisma/client';
 
 @ApiTags('favoris')
 @Controller('favoris')
@@ -25,10 +27,10 @@ export class FavorisController {
       id?: number;
       createdAt?: string;
       chatId: number;
-      utilisateurId: number;
     },
+    @User() user: Utilisateurs,
   ) {
-    return this.favorisService.create(favori);
+    return this.favorisService.create(favori, user);
   }
 
   @Get()

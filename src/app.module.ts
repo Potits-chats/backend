@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { FavorisModule } from './favoris/favoris.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { ConversationsModule } from './conversations/conversations.module';
+import { PrismaService } from './utils/prisma.service';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ConversationsModule } from './conversations/conversations.module';
       useClass: ThrottlerGuard,
     },
     ChatGateway,
+    PrismaService,
   ],
 })
 export class AppModule implements NestModule {

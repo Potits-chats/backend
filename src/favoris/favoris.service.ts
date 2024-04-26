@@ -1,21 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Utilisateurs } from '@prisma/client';
 
 @Injectable()
 export class FavorisService {
   prisma = new PrismaClient();
   private readonly logger = new Logger(FavorisService.name);
 
-  create(favori: {
-    id?: number;
-    createdAt?: string;
-    chatId: number;
-    utilisateurId: number;
-  }) {
+  create(
+    favori: {
+      id?: number;
+      createdAt?: string;
+      chatId: number;
+    },
+    user: Utilisateurs,
+  ) {
     return this.prisma.favoris.create({
       data: {
         chatId: favori.chatId,
-        utilisateurId: favori.utilisateurId,
+        utilisateurId: user.id,
       },
     });
   }
