@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Chats, PrismaClient } from '@prisma/client';
+import { Chats, PrismaClient, Utilisateurs } from '@prisma/client';
 import * as cheerio from 'cheerio';
 
 @Injectable()
@@ -14,18 +14,16 @@ export class ChatsService {
   }) {
     const { associationId, take, skip } = options;
 
-    let query = {
+    let query: any = {
       include: {
         photos: true,
         association: true,
-        favoris: {
-          where: { utilisateurId: 1 }, // TODO CHANGER PAR L'ID DE L'UTILISATEUR CONNECTE
-        },
       },
       where: {
         isVisible: true,
       },
     };
+
     if (associationId) {
       query = {
         ...query,
@@ -89,12 +87,40 @@ export class ChatsService {
     return chat;
   }
 
+  async findByFavoris(user: Utilisateurs) {
+    const chats = await this.prisma.chats.findMany({
+      where: {
+        favoris: {
+          some: {
+            utilisateurId: user.id,
+          },
+        },
+      },
+      include: {
+        photos: true,
+        association: true,
+      },
+    });
+    const truncatedChats = chats.map((chat: Chats) => {
+      const maxDescriptionLength = 130;
+
+      if (chat.description && chat.description.length > maxDescriptionLength) {
+        const $ = cheerio.load(chat.description);
+        const textWithoutHtml = $.text().slice(0, maxDescriptionLength) + '...';
+        chat.description = textWithoutHtml;
+      }
+      return chat;
+    });
+    return truncatedChats;
+  }
+
   async update(id: number, updateChatDto: Chats) {
     delete updateChatDto.id;
     delete updateChatDto.associationId;
     delete updateChatDto['association'];
     delete updateChatDto['photos'];
     delete updateChatDto['userId'];
+    delete updateChatDto['isFavori'];
     const chats = await this.prisma.chats.update({
       where: {
         id: id,

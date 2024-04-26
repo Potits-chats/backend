@@ -1,21 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Utilisateurs } from '@prisma/client';
 
 @Injectable()
 export class FavorisService {
   prisma = new PrismaClient();
   private readonly logger = new Logger(FavorisService.name);
 
-  create(favori: {
-    id?: number;
-    createdAt?: string;
-    chatId: number;
-    utilisateurId: number;
-  }) {
+  create(
+    favori: {
+      id?: number;
+      createdAt?: string;
+      chatId: number;
+    },
+    user: Utilisateurs,
+  ) {
     return this.prisma.favoris.create({
       data: {
         chatId: favori.chatId,
-        utilisateurId: favori.utilisateurId,
+        utilisateurId: user.id,
       },
     });
   }
@@ -24,15 +26,22 @@ export class FavorisService {
     return this.prisma.favoris.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.favoris.findUnique({
-      where: { id: id },
-    });
+  findByUser(user: Utilisateurs) {
+    return this.prisma.favoris
+      .findMany({
+        where: { utilisateurId: user.id },
+        select: { chatId: true },
+        distinct: ['chatId'],
+      })
+      .then((favoris) => favoris.map((favori) => favori.chatId));
   }
 
-  remove(id: number) {
-    return this.prisma.favoris.delete({
-      where: { id: id },
+  removeByCat(id: number, user: Utilisateurs) {
+    return this.prisma.favoris.deleteMany({
+      where: {
+        chatId: id,
+        utilisateurId: user.id,
+      },
     });
   }
 }

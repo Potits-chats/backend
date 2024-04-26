@@ -15,10 +15,11 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Chats } from '@prisma/client';
+import { Chats, Utilisateurs } from '@prisma/client';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
+import { User } from '../utils/user.decorator';
 
 @ApiTags('chats')
 @Controller('chats')
@@ -68,12 +69,23 @@ export class ChatsController {
     });
   }
 
+  @ApiOperation({
+    summary: "Récupération des chats favoris de l'utilisateur connecté",
+  })
+  @Get('/favoris')
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  findByFavoris(@User() user: Utilisateurs) {
+    return this.chatsService.findByFavoris(user);
+  }
+
   @ApiOperation({ summary: "Récupération d'un chat par son id" })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.chatsService.findOne(+id);
   }
 
+  @ApiOperation({ summary: "Mise à jour d'un chat par son id" })
   @Put(':id')
   @UseGuards(PermissionsGuard([PermissionsEnum.UPDATE_CHAT]))
   @UseGuards(AuthorizationGuard)
@@ -82,6 +94,7 @@ export class ChatsController {
     return this.chatsService.update(+id, updateChat);
   }
 
+  @ApiOperation({ summary: "Suppression d'un chat par son id" })
   @Delete(':id')
   @UseGuards(PermissionsGuard([PermissionsEnum.DELETE_CHAT]))
   @UseGuards(AuthorizationGuard)

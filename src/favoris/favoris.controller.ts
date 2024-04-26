@@ -9,13 +9,16 @@ import {
 } from '@nestjs/common';
 import { FavorisService } from './favoris.service';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '../utils/user.decorator';
+import { Utilisateurs } from '@prisma/client';
 
 @ApiTags('favoris')
 @Controller('favoris')
 export class FavorisController {
   constructor(private readonly favorisService: FavorisService) {}
 
+  @ApiOperation({ summary: "Création d'un favori" })
   @Post()
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
@@ -25,30 +28,25 @@ export class FavorisController {
       id?: number;
       createdAt?: string;
       chatId: number;
-      utilisateurId: number;
     },
+    @User() user: Utilisateurs,
   ) {
-    return this.favorisService.create(favori);
+    return this.favorisService.create(favori, user);
   }
 
+  @ApiOperation({ summary: 'Récupération de tous les favoris par utilisateur' })
   @Get()
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  findAll() {
-    return this.favorisService.findAll();
+  findByUser(@User() user: Utilisateurs) {
+    return this.favorisService.findByUser(user);
   }
 
-  @Get(':id')
-  @UseGuards(AuthorizationGuard)
-  @ApiBearerAuth()
-  findOne(@Param('id') id: string) {
-    return this.favorisService.findOne(+id);
-  }
-
+  @ApiOperation({ summary: 'Suppression d un favori' })
   @Delete(':id')
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
-    return this.favorisService.remove(+id);
+  removeByCat(@Param('id') id: number, @User() user: Utilisateurs) {
+    return this.favorisService.removeByCat(+id, user);
   }
 }
