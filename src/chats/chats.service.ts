@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Chats, PrismaClient } from '@prisma/client';
+import { Chats, PrismaClient, Utilisateurs } from '@prisma/client';
 import * as cheerio from 'cheerio';
 
 @Injectable()
@@ -8,24 +8,32 @@ export class ChatsService {
   private readonly logger = new Logger(ChatsService.name);
 
   async findAll(options: {
+    user?: Utilisateurs;
     associationId?: number;
     take?: number;
     skip?: number;
   }) {
-    const { associationId, take, skip } = options;
+    const { user, associationId, take, skip } = options;
 
-    let query = {
+    let query: any = {
       include: {
         photos: true,
         association: true,
-        favoris: {
-          where: { utilisateurId: 1 }, // TODO CHANGER PAR L'ID DE L'UTILISATEUR CONNECTE
-        },
       },
       where: {
         isVisible: true,
       },
     };
+
+    if (user) {
+      query.include = {
+        ...query.include,
+        favoris: {
+          where: { utilisateurId: user.id },
+        },
+      };
+    }
+
     if (associationId) {
       query = {
         ...query,

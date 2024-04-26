@@ -15,10 +15,11 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Chats } from '@prisma/client';
+import { Chats, Utilisateurs } from '@prisma/client';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
+import { User } from '../utils/user.decorator';
 
 @ApiTags('chats')
 @Controller('chats')
@@ -54,6 +55,7 @@ export class ChatsController {
     @Query('associationId') associationId?: number,
     @Query('take') take?: number,
     @Query('skip') skip?: number,
+    @User() user?: Utilisateurs,
   ) {
     take = Number(take) || 10;
     skip = Number(skip) || 0;
@@ -62,6 +64,7 @@ export class ChatsController {
     }
 
     return this.chatsService.findAll({
+      user,
       associationId,
       take,
       skip,
