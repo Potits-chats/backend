@@ -3,21 +3,15 @@ import {
   Get,
   Param,
   Delete,
-  Query,
   Put,
   Body,
   UseGuards,
 } from '@nestjs/common';
 import { AssociationsService } from './associations.service';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
-import { PermissionsGuard } from 'src/authorization/permissions.guard';
-import { PermissionsEnum } from 'src/authorization/permissions';
-import { AuthorizationGuard } from 'src/authorization/authorization.guard';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PermissionsGuard } from '../authorization/permissions.guard';
+import { PermissionsEnum } from '../authorization/permissions';
+import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { Associations } from '@prisma/client';
 
 @ApiTags('associations')
@@ -26,41 +20,9 @@ export class AssociationsController {
   constructor(private readonly associationsService: AssociationsService) {}
 
   @ApiOperation({ summary: 'Récupération de toutes les associations' })
-  @ApiQuery({
-    name: 'chatId',
-    required: false,
-    description: 'id du chat pour filtrer les associations',
-    type: Number,
-  })
-  @ApiQuery({
-    name: 'take',
-    required: false,
-    description: "Nombre d'associations à récupérer",
-    type: Number,
-  })
-  @ApiQuery({
-    name: 'skip',
-    required: false,
-    description: "Nombre d'associations à sauter",
-    type: Number,
-  })
   @Get()
-  findAll(
-    @Query('chatId') chatId?: number,
-    @Query('take') take?: number,
-    @Query('skip') skip?: number,
-  ) {
-    take = Number(take) || 10;
-    skip = Number(skip) || 0;
-    if (chatId) {
-      chatId = Number(chatId);
-    }
-
-    return this.associationsService.findAll({
-      chatId,
-      take,
-      skip,
-    });
+  findAll() {
+    return this.associationsService.findAll();
   }
 
   @ApiOperation({ summary: "Récupération d'une association par son id" })
