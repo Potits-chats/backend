@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { FavorisModule } from './favoris/favoris.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { ConversationsModule } from './conversations/conversations.module';
+import { AssociationsModule } from './associations/associations.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ConversationsModule } from './conversations/conversations.module';
     UsersModule,
     FavorisModule,
     ConversationsModule,
+    AssociationsModule,
   ],
   controllers: [AppController],
   providers: [
