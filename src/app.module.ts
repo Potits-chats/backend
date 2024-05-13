@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { FavorisModule } from './favoris/favoris.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { ConversationsModule } from './conversations/conversations.module';
+import { AssociationsModule } from './associations/associations.module';
 import { PrismaService } from './utils/prisma.service';
 
 @Module({
@@ -29,6 +30,7 @@ import { PrismaService } from './utils/prisma.service';
     UsersModule,
     FavorisModule,
     ConversationsModule,
+    AssociationsModule,
   ],
   controllers: [AppController],
   providers: [
