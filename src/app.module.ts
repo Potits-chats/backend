@@ -13,6 +13,10 @@ import { ChatGateway } from './chat/chat.gateway';
 import { ConversationsModule } from './conversations/conversations.module';
 import { AssociationsModule } from './associations/associations.module';
 import { PrismaService } from './utils/prisma.service';
+import { ContactModule } from './contact/contact.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { ContactService } from './contact/contact.service';
+import { ContactController } from './contact/contact.controller';
 
 @Module({
   imports: [
@@ -30,9 +34,23 @@ import { PrismaService } from './utils/prisma.service';
     UsersModule,
     FavorisModule,
     ConversationsModule,
+    ContactModule,
+    MailerModule.forRoot({
+      transport: {
+        host: String(process.env.EMAIL_HOST),
+        secure: false,
+        auth: {
+          user: String(process.env.EMAIL_USER),
+          pass: String(process.env.EMAIL_PASSWORD),
+        },
+      },
+      defaults: {
+        from: '"No Reply" <noreply@potits-chats.com>',
+      },
+    }),
     AssociationsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ContactController],
   providers: [
     Logger,
     AppService,
@@ -42,6 +60,7 @@ import { PrismaService } from './utils/prisma.service';
     },
     ChatGateway,
     PrismaService,
+    ContactService,
   ],
 })
 export class AppModule implements NestModule {
