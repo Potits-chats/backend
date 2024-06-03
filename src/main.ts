@@ -61,7 +61,7 @@ async function bootstrap() {
   //   next();
   // });
 
-  // Lancement du serveur
+  // Lancement du serveur sur le port 3000
   await app.listen(PORT, () => {});
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     Logger.log(' --- Prisma Studio is running at http://localhost:5555');
