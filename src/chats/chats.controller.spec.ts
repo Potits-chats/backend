@@ -16,6 +16,7 @@ describe('ChatsController', () => {
           useValue: {
             findOne: jest.fn().mockResolvedValue({}),
             findAll: jest.fn().mockResolvedValue([]),
+            findByFavoris: jest.fn().mockResolvedValue([]),
             update: jest.fn().mockResolvedValue({}),
             remove: jest.fn().mockResolvedValue({}),
           },
@@ -86,6 +87,15 @@ describe('ChatsController', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
 
       expect(await controller.findOne('1')).toBe(result);
+    });
+  });
+
+  describe('findByFavoris', () => {
+    it('should find chats by favoris', async () => {
+      const result = [];
+      const user = { id: 1, email: '', userId: '1', associationId: 1 };
+      jest.spyOn(service, 'findByFavoris').mockResolvedValue(result);
+      expect(await controller.findByFavoris(user)).toBe(result);
     });
   });
 
