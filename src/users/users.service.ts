@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../utils/prisma.service';
 
 // This should be a real class/interface representing a user entity
 export type User = any;
 
 @Injectable()
 export class UsersService {
-  prisma = new PrismaClient();
+  constructor(private prisma: PrismaService) {}
+
   private readonly logger = new Logger(UsersService.name);
 
   // private readonly users = [
