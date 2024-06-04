@@ -1,10 +1,11 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Chats, PrismaClient, Utilisateurs } from '@prisma/client';
+import { Chats, Utilisateurs } from '@prisma/client';
 import * as cheerio from 'cheerio';
+import { PrismaService } from '../utils/prisma.service';
 
 @Injectable()
 export class ChatsService {
-  prisma = new PrismaClient();
+  constructor(private prisma: PrismaService) {}
   private readonly logger = new Logger(ChatsService.name);
 
   async findAll(options: {
