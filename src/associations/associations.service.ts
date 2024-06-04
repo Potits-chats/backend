@@ -1,9 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Associations, PrismaClient } from '@prisma/client';
+import { Associations } from '@prisma/client';
+import { PrismaService } from '../utils/prisma.service';
 
 @Injectable()
 export class AssociationsService {
-  prisma = new PrismaClient();
+  constructor(private prisma: PrismaService) {}
   private readonly logger = new Logger(AssociationsService.name);
 
   async findAll() {
@@ -17,6 +18,7 @@ export class AssociationsService {
         id: id,
       },
     });
+    console.log(association);
     if (!association) {
       throw new NotFoundException();
     }
