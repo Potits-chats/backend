@@ -19,16 +19,16 @@ import { Associations } from '@prisma/client';
 export class AssociationsController {
   constructor(private readonly associationsService: AssociationsService) {}
 
-  @ApiOperation({ summary: 'Récupération de toutes les associations' })
-  @Get()
-  findAll() {
-    return this.associationsService.findAll();
-  }
-
   @ApiOperation({ summary: "Récupération d'une association par son id" })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.associationsService.findOne(+id);
+  }
+
+  @ApiOperation({ summary: 'Récupération de toutes les associations' })
+  @Get()
+  findAll() {
+    return this.associationsService.findAll();
   }
 
   @Put(':id')
