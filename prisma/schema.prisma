@@ -51,8 +51,10 @@ model Photos {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   url       String
-  chatId    Int
-  chat      Chats    @relation(fields: [chatId], references: [id], map: "Photos_Chats_FK")
+  chatId    Int?
+  associationId Int?
+  chat     Chats?    @relation(fields: [chatId], references: [id], map: "Photos_Chats_FK")
+  asso     Associations? @relation(fields: [associationId], references: [id], map: "Photos_Associations_FK")
 
   @@index([chatId], map: "Photos_chatId_fkey")
 }
@@ -85,12 +87,12 @@ model Associations {
   nom           String          @unique
   url           String?         @db.VarChar(50)
   ville         String          @db.VarChar(50)
-  urlImage      String?         @db.VarChar(255)
   description   String?         @db.Text
   tel           String?         @db.VarChar(50)
   chats         Chats[]
   Conversations Conversations[]
   utilisateurs  Utilisateurs[]
+  photos        Photos[]
 }
 
 model Favoris {

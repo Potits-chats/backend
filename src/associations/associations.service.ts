@@ -25,6 +25,7 @@ export class AssociationsService {
         id: id,
       },
       include: {
+        photos: true,
         chats: true,
       },
     });
