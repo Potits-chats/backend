@@ -13,3 +13,5 @@ jobs:
           jira-token: ${{ secrets.JIRA_TOKEN }}
           jira-base-url: https://les-potits-chats.atlassian.net/
           skip-branches: '^(production-release|main|master|release\/v\d+)$' #optional
+          jira-project-key: 'LMST2'
+          custom-issue-number-regexp: '\d+' 
