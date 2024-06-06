@@ -11,6 +11,7 @@ export class AssociationsService {
     const associations = await this.prisma.associations.findMany({
       include: {
         chats: true,
+        photos: true,
       },
       orderBy: {
         id: 'desc',
