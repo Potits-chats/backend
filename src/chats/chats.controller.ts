@@ -31,7 +31,7 @@ export class ChatsController {
   //   return this.chatsService.create(createChatDto);
   // }
 
-  // Test 2
+  // Test 3s
   @ApiOperation({ summary: 'Récupération de tous les chats' })
   @ApiQuery({
     name: 'associationId',
