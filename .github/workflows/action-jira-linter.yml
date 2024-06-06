@@ -9,4 +9,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           jira-token: ${{ secrets.JIRA_TOKEN }}
-          jira-base-url: https://les-potits-chats.atlassian.net/
+          jira-base-url: https://les-potits-chats.atlassian.net
