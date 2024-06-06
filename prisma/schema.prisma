@@ -86,6 +86,7 @@ model Associations {
   url           String?         @db.VarChar(50)
   ville         String          @db.VarChar(50)
   description   String?
+  shortDescription String?
   tel           String?         @db.VarChar(50)
   chats         Chats[]
   conversations Conversations[]
