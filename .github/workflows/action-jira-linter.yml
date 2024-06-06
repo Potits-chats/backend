@@ -8,5 +8,6 @@ jobs:
       - uses: btwrk/action-jira-linter@v1.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          jira-user: ${{ secrets.JIRA_USER }}
           jira-token: ${{ secrets.JIRA_TOKEN }}
           jira-base-url: https://les-potits-chats.atlassian.net/
