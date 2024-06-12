@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Associations } from '@prisma/client';
 import { PrismaService } from '../utils/prisma.service';
+import { UpdateAssociationDto } from './dto/associations.dto';
 
 @Injectable()
 export class AssociationsService {
@@ -36,13 +36,18 @@ export class AssociationsService {
     return association;
   }
 
-  async update(id: number, updateAssoDto: Associations) {
+  async update(id: number, updateAssoDto: UpdateAssociationDto) {
     const associations = await this.prisma.associations.update({
       where: {
         id: id,
       },
       data: {
-        ...updateAssoDto,
+        nom: updateAssoDto.nom,
+        url: updateAssoDto.url,
+        ville: updateAssoDto.ville,
+        description: updateAssoDto.description,
+        shortDescription: updateAssoDto.shortDescription,
+        tel: updateAssoDto.tel,
       },
     });
     return associations;

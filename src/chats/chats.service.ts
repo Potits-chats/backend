@@ -12,10 +12,12 @@ export class ChatsService {
     associationId?: number;
     take?: number;
     skip?: number;
+    ville?: string;
+    race?: string;
   }) {
-    const { associationId, take, skip } = options;
+    const { associationId, take, skip, ville, race } = options;
 
-    let query: any = {
+    const query: any = {
       include: {
         photos: true,
         association: true,
@@ -26,29 +28,43 @@ export class ChatsService {
     };
 
     if (associationId) {
-      query = {
-        ...query,
-        where: {
-          ...query.where,
-          association: {
-            id: associationId,
+      query.where = {
+        ...query.where,
+        association: {
+          id: associationId,
+        },
+      };
+    }
+
+    if (ville) {
+      query.where = {
+        ...query.where,
+        association: {
+          ...query.where.association,
+          ville: {
+            contains: ville,
+            mode: 'insensitive',
           },
         },
-      } as typeof query & { where: { association: { id: number } } };
+      };
+    }
+
+    if (race) {
+      query.where = {
+        ...query.where,
+        race: {
+          contains: race,
+          mode: 'insensitive',
+        },
+      };
     }
 
     if (take) {
-      query = {
-        ...query,
-        take,
-      } as typeof query & { take: number };
+      query.take = take;
     }
 
     if (skip) {
-      query = {
-        ...query,
-        skip,
-      } as typeof query & { skip: number };
+      query.skip = skip;
     }
 
     const chats = await this.prisma.chats.findMany({
@@ -68,6 +84,7 @@ export class ChatsService {
       }
       return chat;
     });
+
     return truncatedChats;
   }
 
