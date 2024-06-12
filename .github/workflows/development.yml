@@ -31,6 +31,13 @@ jobs:
 
       - name: "🔍 run tests"
         run: npm run test --if-present
+        continue-on-error: true
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: ./junit.xml
 
   lint:
     name: Code standards
