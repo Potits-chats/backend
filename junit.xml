@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="12" failures="0" errors="0" time="11.591">
+  <testsuite name="PermissionsGuard" errors="0" failures="0" skipped="0" timestamp="2024-06-12T14:22:47" time="10.221" tests="3">
+    <testcase classname="PermissionsGuard should allow access when the user has the required permissions" name="PermissionsGuard should allow access when the user has the required permissions" time="0.028">
+    </testcase>
+    <testcase classname="PermissionsGuard should throw ForbiddenException when the user lacks required permissions" name="PermissionsGuard should throw ForbiddenException when the user lacks required permissions" time="0.017">
+    </testcase>
+    <testcase classname="PermissionsGuard should throw ForbiddenException for other errors" name="PermissionsGuard should throw ForbiddenException for other errors" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="AuthorizationGuard" errors="0" failures="0" skipped="0" timestamp="2024-06-12T14:22:47" time="10.207" tests="5">
+    <testcase classname="AuthorizationGuard should allow access when the token is valid" name="AuthorizationGuard should allow access when the token is valid" time="0.028">
+    </testcase>
+    <testcase classname="AuthorizationGuard should throw UnauthorizedException for InvalidTokenError" name="AuthorizationGuard should throw UnauthorizedException for InvalidTokenError" time="0.015">
+    </testcase>
+    <testcase classname="AuthorizationGuard should throw UnauthorizedException for UnauthorizedError" name="AuthorizationGuard should throw UnauthorizedException for UnauthorizedError" time="0.004">
+    </testcase>
+    <testcase classname="AuthorizationGuard should throw InternalServerErrorException for other errors" name="AuthorizationGuard should throw InternalServerErrorException for other errors" time="0.005">
+    </testcase>
+    <testcase classname="AuthorizationGuard should log an error when no token is provided" name="AuthorizationGuard should log an error when no token is provided" time="0.007">
+    </testcase>
+  </testsuite>
+  <testsuite name="ContactService" errors="0" failures="0" skipped="0" timestamp="2024-06-12T14:22:47" time="10.366" tests="2">
+    <testcase classname="ContactService should be defined" name="ContactService should be defined" time="0.027">
+    </testcase>
+    <testcase classname="ContactService should send an email" name="ContactService should send an email" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="ContactController" errors="0" failures="0" skipped="0" timestamp="2024-06-12T14:22:47" time="10.5" tests="2">
+    <testcase classname="ContactController should be defined" name="ContactController should be defined" time="0.068">
+    </testcase>
+    <testcase classname="ContactController should call sendEmail on ContactService" name="ContactController should call sendEmail on ContactService" time="0.005">
+    </testcase>
+  </testsuite>
+</testsuites>
