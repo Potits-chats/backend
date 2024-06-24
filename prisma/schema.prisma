@@ -4,8 +4,6 @@ generator client {
 }
 
 datasource db {
-  // provider = "mysql"
-  // url      = env("DATABASE_URL")
   provider  = "postgresql"
   url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
@@ -16,7 +14,7 @@ model Chats {
   nom                  String
   age                  Int
   automatiqueAnnonce   Boolean       @default(false)
-  description          String        @db.Text
+  description          String
   race                 String?
   annonceUrl           String?
   sterilise            Boolean?
@@ -48,11 +46,13 @@ model Chats {
 }
 
 model Photos {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  url       String
-  chatId    Int
-  chat      Chats    @relation(fields: [chatId], references: [id], map: "Photos_Chats_FK")
+  id            Int           @id @default(autoincrement())
+  createdAt     DateTime      @default(now())
+  url           String
+  chatId        Int?
+  associationId Int?
+  association   Associations? @relation(fields: [associationId], references: [id], map: "Photos_Associations_FK")
+  chat          Chats?        @relation(fields: [chatId], references: [id], map: "Photos_Chats_FK")
 
   @@index([chatId], map: "Photos_chatId_fkey")
 }
@@ -72,10 +72,10 @@ model Utilisateurs {
   email         String          @unique
   userId        String          @unique
   associationId Int?
-  Conversations Conversations[]
+  conversations Conversations[]
   favoris       Favoris[]
+  messages      Messages[]
   association   Associations?   @relation(fields: [associationId], references: [id], map: "Utilisateurs_Associations_FK")
-  Messages      Messages[]
 
   @@index([associationId], map: "Utilisateurs_associationId_fkey")
 }
@@ -85,11 +85,12 @@ model Associations {
   nom           String          @unique
   url           String?         @db.VarChar(50)
   ville         String          @db.VarChar(50)
-  urlImage      String?         @db.VarChar(255)
-  description   String?         @db.Text
+  description   String?
+  shortDescription String?
   tel           String?         @db.VarChar(50)
   chats         Chats[]
-  Conversations Conversations[]
+  conversations Conversations[]
+  photos        Photos[]
   utilisateurs  Utilisateurs[]
 }
 
@@ -107,12 +108,12 @@ model Favoris {
 
 model Messages {
   id              Int           @id @default(autoincrement())
-  contenu         String        @db.Text
+  contenu         String
   createdAt       DateTime      @default(now())
   utilisateursId  Int
   conversationsId Int
-  conversation    Conversations @relation(fields: [conversationsId], references: [id], map: "Messages_Conversation_FK")
   auteur          Utilisateurs  @relation(fields: [utilisateursId], references: [id], map: "Messages_Auteur_FK")
+  conversation    Conversations @relation(fields: [conversationsId], references: [id], map: "Messages_Conversation_FK")
 
   @@index([conversationsId], map: "Index_ConversationId")
   @@index([utilisateursId], map: "Index_UtilisateursId")
@@ -120,11 +121,11 @@ model Messages {
 
 model Conversations {
   id             Int          @id @default(autoincrement())
+  associationsId Int
+  utilisateursId Int
   association    Associations @relation(fields: [associationsId], references: [id])
   utilisateur    Utilisateurs @relation(fields: [utilisateursId], references: [id])
   messages       Messages[]
-  associationsId Int
-  utilisateursId Int
 }
 
 enum Role {

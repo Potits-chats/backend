@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient, Utilisateurs } from '@prisma/client';
+import { Utilisateurs } from '@prisma/client';
+import { PrismaService } from '../utils/prisma.service';
 
 @Injectable()
 export class FavorisService {
-  prisma = new PrismaClient();
+  constructor(private prisma: PrismaService) {}
   private readonly logger = new Logger(FavorisService.name);
 
   create(

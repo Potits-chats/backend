@@ -50,11 +50,25 @@ export class ChatsController {
     description: 'Nombre de chats à sauter',
     type: Number,
   })
+  @ApiQuery({
+    name: 'ville',
+    required: false,
+    description: 'Ville pour filtrer les chats',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'race',
+    required: false,
+    description: 'Race des chats pour filtrer',
+    type: String,
+  })
   @Get()
   findAll(
     @Query('associationId') associationId?: number,
     @Query('take') take?: number,
     @Query('skip') skip?: number,
+    @Query('ville') ville?: string,
+    @Query('race') race?: string,
   ) {
     take = Number(take) || 10;
     skip = Number(skip) || 0;
@@ -66,6 +80,8 @@ export class ChatsController {
       associationId,
       take,
       skip,
+      ville,
+      race,
     });
   }
 

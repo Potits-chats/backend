@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Associations } from '@prisma/client';
 import { PrismaService } from '../utils/prisma.service';
+import { UpdateAssociationDto } from './dto/associations.dto';
 
 @Injectable()
 export class AssociationsService {
@@ -8,7 +9,15 @@ export class AssociationsService {
   private readonly logger = new Logger(AssociationsService.name);
 
   async findAll() {
-    const associations = await this.prisma.associations.findMany();
+    const associations = await this.prisma.associations.findMany({
+      include: {
+        chats: true,
+        photos: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
     return associations;
   }
 
@@ -16,6 +25,10 @@ export class AssociationsService {
     const association = await this.prisma.associations.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        photos: true,
+        chats: true,
       },
     });
     console.log(association);
@@ -25,13 +38,18 @@ export class AssociationsService {
     return association;
   }
 
-  async update(id: number, updateAssoDto: Associations) {
+  async update(id: number, updateAssoDto: UpdateAssociationDto) {
     const associations = await this.prisma.associations.update({
       where: {
         id: id,
       },
       data: {
-        ...updateAssoDto,
+        nom: updateAssoDto.nom,
+        url: updateAssoDto.url,
+        ville: updateAssoDto.ville,
+        description: updateAssoDto.description,
+        shortDescription: updateAssoDto.shortDescription,
+        tel: updateAssoDto.tel,
       },
     });
     return associations;

@@ -7,7 +7,8 @@ export type User = any;
 
 @Injectable()
 export class UsersService {
-  prisma = new PrismaClient();
+  constructor(private prisma: PrismaService) {}
+
   private readonly logger = new Logger(UsersService.name);
 
   // private readonly users = [

@@ -12,18 +12,12 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
-import { Associations } from '@prisma/client';
+import { UpdateAssociationDto } from './dto/associations.dto';
 
 @ApiTags('associations')
 @Controller('associations')
 export class AssociationsController {
   constructor(private readonly associationsService: AssociationsService) {}
-
-  @ApiOperation({ summary: 'Récupération de toutes les associations' })
-  @Get()
-  findAll() {
-    return this.associationsService.findAll();
-  }
 
   @ApiOperation({ summary: "Récupération d'une association par son id" })
   @Get(':id')
@@ -31,11 +25,17 @@ export class AssociationsController {
     return this.associationsService.findOne(+id);
   }
 
+  @ApiOperation({ summary: 'Récupération de toutes les associations' })
+  @Get()
+  findAll() {
+    return this.associationsService.findAll();
+  }
+
   @Put(':id')
   @UseGuards(PermissionsGuard([PermissionsEnum.UPDATE_ASSO]))
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateAsso: Associations) {
+  update(@Param('id') id: string, @Body() updateAsso: UpdateAssociationDto) {
     return this.associationsService.update(+id, updateAsso);
   }
 
