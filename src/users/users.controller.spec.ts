@@ -13,6 +13,7 @@ describe('UsersController', () => {
         {
           provide: UsersService,
           useValue: {
+            findAll: jest.fn().mockResolvedValue([]),
             create: jest.fn().mockResolvedValue('create'),
           },
         },
@@ -32,6 +33,13 @@ describe('UsersController', () => {
       const createChatDto = { email: 'test@test.com', userId: '123' };
       await usersController.create(createChatDto);
       expect(usersService.create).toHaveBeenCalledWith(createChatDto);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return an array of users', async () => {
+      expect(await usersController.findAll()).toEqual([]);
+      expect(usersService.findAll).toHaveBeenCalled();
     });
   });
 });
