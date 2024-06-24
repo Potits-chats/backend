@@ -14,8 +14,9 @@ describe('AssociationsController', () => {
           provide: AssociationsService,
           useValue: {
             findAll: jest.fn().mockResolvedValue([]),
-            findOne: jest.fn().mockResolvedValue({ id: 1 }),
-            update: jest.fn().mockResolvedValue({ id: 1, name: 'updated' }),
+            findOne: jest.fn().mockResolvedValue([]),
+            update: jest.fn().mockResolvedValue([]),
+            remove: jest.fn().mockResolvedValue([]),
           },
         },
       ],
@@ -36,21 +37,62 @@ describe('AssociationsController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update an association and return the updated association', async () => {
-      const updateAsso = {
-        id: 1,
-        name: 'updated',
-        nom: 'name',
-        url: 'url',
-        ville: 'ville',
-        urlImage: 'urlImage',
-        description: 'description',
-        tel: 'tel',
+  describe('findOne', () => {
+    it('should get a chat', async () => {
+      const result = {
+        id: 0,
+        nom: '',
+        url: '',
+        ville: '',
+        urlImage: '',
+        description: '',
+        tel: '',
       };
-      service.update = jest.fn().mockResolvedValue(updateAsso);
-      expect(await controller.update('1', updateAsso)).toEqual(updateAsso);
-      expect(service.update).toHaveBeenCalledWith(1, updateAsso);
+      jest.spyOn(service, 'findOne').mockResolvedValue(result);
+
+      expect(await controller.findOne('1')).toBe(result);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a chat', async () => {
+      const result = {
+        id: 0,
+        nom: '',
+        url: '',
+        ville: '',
+        urlImage: '',
+        description: '',
+        tel: '',
+      };
+      jest.spyOn(service, 'update').mockResolvedValue(result);
+      expect(
+        await controller.update('1', {
+          id: 0,
+          nom: '',
+          url: '',
+          ville: '',
+          urlImage: '',
+          description: '',
+          tel: '',
+        }),
+      ).toBe(result);
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete a chat', async () => {
+      const result = {
+        id: 0,
+        nom: '',
+        url: '',
+        ville: '',
+        urlImage: '',
+        description: '',
+        tel: '',
+      };
+      jest.spyOn(service, 'remove').mockResolvedValue(result as never);
+      expect(await controller.remove('1')).toBe(result);
     });
   });
 });
