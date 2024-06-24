@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../utils/prisma.service';
+import { PrismaClient } from '@prisma/client';
+import { CreateUsersDto } from './dto/create-users.dto';
 
 // This should be a real class/interface representing a user entity
 export type User = any;
@@ -48,7 +49,7 @@ export class UsersService {
     return this.prisma.utilisateurs.findMany();
   }
 
-  async create(createUserDto: any): Promise<User> {
+  async create(createUserDto: CreateUsersDto): Promise<User> {
     this.logger.log(`createUserDto: ${JSON.stringify(createUserDto)}`);
     return this.prisma.utilisateurs.create({
       data: {

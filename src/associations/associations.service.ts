@@ -1,4 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Associations } from '@prisma/client';
 import { PrismaService } from '../utils/prisma.service';
 import { UpdateAssociationDto } from './dto/associations.dto';
 
@@ -30,6 +31,7 @@ export class AssociationsService {
         chats: true,
       },
     });
+    console.log(association);
     if (!association) {
       throw new NotFoundException();
     }
