@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { FavorisService } from './favoris.service';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
@@ -38,8 +39,9 @@ export class FavorisController {
   @Get()
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  findByUser(@User() user: Utilisateurs) {
-    return this.favorisService.findByUser(user);
+  findByUser(@User() user: Utilisateurs, @Query('take') take?: number) {
+    take = Number(take) || 10;
+    return this.favorisService.findByUser(user, take);
   }
 
   @ApiOperation({ summary: 'Suppression d un favori' })

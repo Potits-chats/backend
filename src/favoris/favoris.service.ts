@@ -3,6 +3,9 @@ import { PrismaClient, Utilisateurs } from '@prisma/client';
 
 @Injectable()
 export class FavorisService {
+  static mockImplementation() {
+    throw new Error('Method not implemented.');
+  }
   prisma = new PrismaClient();
   private readonly logger = new Logger(FavorisService.name);
 
@@ -26,7 +29,8 @@ export class FavorisService {
     return this.prisma.favoris.findMany();
   }
 
-  findByUser(user: Utilisateurs) {
+  findByUser(user: Utilisateurs, take: number) {
+    console.log(take);
     return this.prisma.favoris
       .findMany({
         where: { utilisateurId: user.id },
