@@ -1,28 +1,40 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Conversations, Messages, PrismaClient } from '@prisma/client';
+import { PusherService } from 'src/pusher/pusher.service';
 
 @Injectable()
 export class ConversationsService {
   prisma = new PrismaClient();
   private readonly logger = new Logger(ConversationsService.name);
 
-  createConversation(
+  constructor(private readonly pusherService: PusherService) {}
+
+  private emitEvent(eventType: string, data: any) {
+    try {
+      this.pusherService.trigger('conversation', eventType, data);
+    } catch (error) {
+      this.logger.error(`Failed to emit ${eventType} event`, error.stack);
+    }
+  }
+
+  async createConversation(
     utilisateurId: number,
     associationId: number,
   ): Promise<Conversations> {
-    const conversation = this.prisma.conversations.findFirst({
+    let conversation = await this.prisma.conversations.findFirst({
       where: {
         utilisateursId: utilisateurId,
         associationsId: associationId,
       },
     });
     if (!conversation) {
-      return this.prisma.conversations.create({
+      conversation = await this.prisma.conversations.create({
         data: {
           utilisateursId: utilisateurId,
           associationsId: associationId,
         },
       });
+      this.emitEvent('new-conversation', { conversationId: conversation.id });
     }
     return conversation;
   }
@@ -44,13 +56,15 @@ export class ConversationsService {
       conversationId = conversation.id;
     }
 
-    return this.prisma.messages.create({
+    const message = await this.prisma.messages.create({
       data: {
         contenu,
         utilisateursId,
         conversationsId: conversationId,
       },
     });
+    this.emitEvent('new-message', { messageId: message.id, conversationId });
+    return message;
   }
 
   findAllByUser(userid: number) {

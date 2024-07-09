@@ -7,21 +7,20 @@ export class PusherService {
 
   constructor() {
     this.pusher = new Pusher({
-      appId: process.env.PUSHER_APP_ID || '',
-      key: process.env.PUSHER_KEY || '',
-      secret: process.env.PUSHER_SECRET || '',
-      cluster: process.env.PUSHER_CLUSTER || 'eu',
+      appId: process.env.APP_ID_PUSHER,
+      key: process.env.KEY_PUSHER,
+      secret: process.env.SECRET_PUSHER,
+      cluster: process.env.CLUSTER_PUSHER || 'eu',
       useTLS: true,
     });
   }
 
-  trigger(channel: string, event: string, data: any) {
-    return this.pusher.trigger(channel, event, data);
+  async trigger(channel: string, event: string, data: object): Promise<void> {
+    try {
+      await this.pusher.trigger(channel, event, data);
+    } catch (error) {
+      console.error('Error triggering Pusher event: ', error);
+      throw error;
+    }
   }
 }
-// function Injectables(): (
-//   target: typeof PusherService,
-//   context: ClassDecoratorContext<typeof PusherService>,
-// ) => void | typeof PusherService {
-//   throw new Error('Function not implemented.');
-// }
