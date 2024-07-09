@@ -17,6 +17,7 @@ import { ContactModule } from './contact/contact.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ContactService } from './contact/contact.service';
 import { ContactController } from './contact/contact.controller';
+import { PusherService } from './pusher/pusher.service';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { ContactController } from './contact/contact.controller';
     ChatGateway,
     PrismaService,
     ContactService,
+    PusherService,
   ],
 })
 export class AppModule implements NestModule {

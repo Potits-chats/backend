@@ -1,11 +1,15 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ConversationsService } from './conversations.service';
+import { PusherService } from '../pusher/pusher.service';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('conversations')
 @Controller('conversations')
 export class ConversationsController {
-  constructor(private readonly conversationsService: ConversationsService) {}
+  constructor(
+    private readonly conversationsService: ConversationsService,
+    private readonly pusherService: PusherService,
+  ) {}
 
   // @UseGuards(AuthorizationGuard)
   // @ApiBearerAuth()
@@ -21,7 +25,6 @@ export class ConversationsController {
   })
 
   // @UseGuards(AuthorizationGuard)
-  @ApiOperation({ summary: 'Créer un message' })
   @ApiOperation({ summary: 'Créer un message' })
   @ApiBody({
     schema: {
@@ -44,22 +47,36 @@ export class ConversationsController {
       conversationsId?: number;
     },
   ) {
-    return this.conversationsService.createMessage(
+    const createdMessage = await this.conversationsService.createMessage(
       messageDto.contenu,
       messageDto.utilisateursId,
       messageDto.conversationsId,
       messageDto.associationId,
     );
+
+    // Envoyer un message à Pusher pour notifier la création d'un message
+    this.pusherService.trigger('conversation', 'new-message', {
+      message: createdMessage,
+    });
+
+    return createdMessage;
   }
 
   @Post('')
   createConversation(
     @Body() conversation: { utilisateurId: number; associationId: number },
   ) {
-    return this.conversationsService.createConversation(
+    const newConversation = this.conversationsService.createConversation(
       conversation.associationId,
       conversation.utilisateurId,
     );
+
+    // Envoyer une notification à Pusher pour informer de la nouvelle conversation
+    this.pusherService.trigger('conversation', 'new-conversation', {
+      conversation: newConversation,
+    });
+
+    return newConversation;
   }
 
   // @UseGuards(AuthorizationGuard)
