@@ -14,9 +14,9 @@ describe('AssociationsController', () => {
           provide: AssociationsService,
           useValue: {
             findAll: jest.fn().mockResolvedValue([]),
-            findOne: jest.fn().mockResolvedValue([]),
-            update: jest.fn().mockResolvedValue([]),
-            remove: jest.fn().mockResolvedValue([]),
+            findOne: jest.fn().mockResolvedValue({}),
+            update: jest.fn().mockResolvedValue({}),
+            remove: jest.fn().mockResolvedValue({}),
           },
         },
       ],
@@ -38,15 +38,17 @@ describe('AssociationsController', () => {
   });
 
   describe('findOne', () => {
-    it('should get a chat', async () => {
+    it('should get an association', async () => {
       const result = {
         id: 0,
         nom: '',
         url: '',
         ville: '',
-        urlImage: '',
         description: '',
+        shortDescription: '',
         tel: '',
+        chats: [],
+        photos: [],
       };
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
 
@@ -55,25 +57,24 @@ describe('AssociationsController', () => {
   });
 
   describe('update', () => {
-    it('should update a chat', async () => {
+    it('should update an association', async () => {
       const result = {
         id: 0,
         nom: '',
         url: '',
         ville: '',
-        urlImage: '',
         description: '',
+        shortDescription: '',
         tel: '',
       };
       jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(
         await controller.update('1', {
-          id: 0,
           nom: '',
           url: '',
           ville: '',
-          urlImage: '',
           description: '',
+          shortDescription: '',
           tel: '',
         }),
       ).toBe(result);
@@ -81,16 +82,8 @@ describe('AssociationsController', () => {
   });
 
   describe('remove', () => {
-    it('should delete a chat', async () => {
-      const result = {
-        id: 0,
-        nom: '',
-        url: '',
-        ville: '',
-        urlImage: '',
-        description: '',
-        tel: '',
-      };
+    it('should delete an association', async () => {
+      const result = {};
       jest.spyOn(service, 'remove').mockResolvedValue(result as never);
       expect(await controller.remove('1')).toBe(result);
     });

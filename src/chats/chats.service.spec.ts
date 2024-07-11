@@ -68,25 +68,17 @@ describe('ChatsService', () => {
         nom: '',
         url: '',
         ville: '',
-        urlImage: '',
         description: '',
+        shortDescription: '',
         tel: '',
-        email: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        chats: [],
       },
-      photos: [{ id: 1, createdAt: undefined, url: '', chatId: 1 }],
+      photos: [
+        { id: 1, createdAt: undefined, url: '', chatId: 1, associationId: 1 },
+      ],
     };
     jest.spyOn(service, 'findOne').mockResolvedValue(result);
     expect(await service.findOne(1)).toBe(result);
   });
-
-  // it('should create a chat', async () => {
-  //   const result = {};
-  //   jest.spyOn(service, 'create').mockResolvedValue(result);
-  //   expect(await service.create({})).toBe(result);
-  // });
 
   it('should update a chat', async () => {
     const result = {
@@ -122,48 +114,16 @@ describe('ChatsService', () => {
         nom: '',
         url: '',
         ville: '',
-        urlImage: '',
         description: '',
+        shortDescription: '',
         tel: '',
-        email: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        chats: [],
       },
-      photos: [{ id: 1, createdAt: undefined, url: '', chatId: 1 }],
+      photos: [
+        { id: 1, createdAt: undefined, url: '', chatId: 1, associationId: 1 },
+      ],
     };
     jest.spyOn(service, 'update').mockResolvedValue(result);
-    expect(
-      await service.update(1, {
-        id: 0,
-        nom: '',
-        age: 0,
-        automatiqueAnnonce: false,
-        description: '',
-        race: '',
-        annonceUrl: '',
-        sterilise: false,
-        vaccinations: '',
-        adopte: false,
-        histoire: '',
-        type: '',
-        sexe: 'FEMELLE',
-        couleur: '',
-        taille: 'PETIT',
-        ententeChien: false,
-        ententeChat: false,
-        ententeEnfant: false,
-        typeFoyerMaison: false,
-        typeFoyerAppartement: false,
-        contactEmail: '',
-        contactTel: '',
-        contactUrl: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        associationId: 0,
-        isVisible: false,
-      }),
-    ).toBe(result);
+    expect(await service.update(1, result)).toBe(result);
   });
 
   it('should remove a chat', async () => {
