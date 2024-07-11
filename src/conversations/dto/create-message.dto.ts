@@ -1,6 +1,18 @@
+import { IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
 export class CreateMessageDto {
-  contenu: string;
-  utilisateursId: number;
-  associationId?: number;
-  conversationsId?: number;
+  @ApiProperty({
+    description: 'Contenu du message',
+    example: 'Hello World',
+  })
+  @IsString()
+  message: string;
+
+  @ApiProperty({
+    description: 'Nom du canal',
+    example: 'presence-channel-1',
+  })
+  @IsString()
+  channel: string;
 }
