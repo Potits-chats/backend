@@ -10,10 +10,42 @@ describe('AssociationsService', () => {
         {
           provide: AssociationsService,
           useValue: {
-            findOne: jest.fn().mockResolvedValue([]),
-            findAll: jest.fn().mockResolvedValue([]),
-            update: jest.fn().mockResolvedValue([]),
-            remove: jest.fn().mockResolvedValue([]),
+            findOne: jest.fn().mockResolvedValue({
+              id: 1,
+              nom: 'Name',
+              url: '',
+              ville: '',
+              description: '',
+              shortDescription: '',
+              tel: '',
+              chats: [],
+              photos: [],
+            }),
+            findAll: jest.fn().mockResolvedValue([
+              {
+                id: 1,
+                nom: 'Name',
+                url: '',
+                ville: '',
+                description: '',
+                shortDescription: '',
+                tel: '',
+                chats: [],
+                photos: [],
+              },
+            ]),
+            update: jest.fn().mockResolvedValue({
+              id: 1,
+              nom: 'New Name',
+              url: '',
+              ville: '',
+              description: '',
+              shortDescription: '',
+              tel: '',
+              chats: [],
+              photos: [],
+            }),
+            remove: jest.fn().mockResolvedValue({}),
           },
         },
       ],
@@ -29,15 +61,15 @@ describe('AssociationsService', () => {
         nom: 'Name',
         url: '',
         ville: '',
-        urlImage: '',
         description: '',
+        shortDescription: '',
         tel: '',
+        chats: [],
+        photos: [],
       };
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
       expect(await service.findOne(1)).toBe(result);
     });
-
-    // Ajoutez ici d'autres cas de test si nécessaire
   });
 
   describe('findAll', () => {
@@ -48,16 +80,16 @@ describe('AssociationsService', () => {
           nom: 'Name',
           url: '',
           ville: '',
-          urlImage: '',
           description: '',
+          shortDescription: '',
           tel: '',
+          chats: [],
+          photos: [],
         },
       ];
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       expect(await service.findAll()).toBe(result);
     });
-
-    // Ajoutez ici d'autres cas de test si nécessaire
   });
 
   describe('update', () => {
@@ -67,35 +99,32 @@ describe('AssociationsService', () => {
         nom: 'New Name',
         url: '',
         ville: '',
-        urlImage: '',
         description: '',
+        shortDescription: '',
         tel: '',
+        chats: [],
+        photos: [],
       };
       jest.spyOn(service, 'update').mockResolvedValue(result);
 
       expect(
         await service.update(1, {
-          id: 1,
           nom: 'New Name',
           url: '',
           ville: '',
-          urlImage: '',
           description: '',
+          shortDescription: '',
           tel: '',
         }),
       ).toBe(result);
     });
-
-    // Ajoutez ici d'autres cas de test si nécessaire
   });
 
   describe('remove', () => {
-    it('should remove a association', async () => {
+    it('should remove an association', async () => {
       const result = {};
       jest.spyOn(service, 'remove').mockResolvedValue(result as never);
       expect(await service.remove(1)).toBe(result);
     });
-
-    // Ajoutez ici d'autres cas de test si nécessaire
   });
 });
