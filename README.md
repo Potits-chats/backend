@@ -23,6 +23,7 @@
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
+[![codecov](https://codecov.io/gh/Potits-chats/backend/graph/badge.svg?token=B7LDFW40IU)](https://codecov.io/gh/Potits-chats/backend)
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
