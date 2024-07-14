@@ -18,8 +18,11 @@ export class ConversationsController {
   @ApiResponse({ status: 200, description: 'Message sent successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid request.' })
   @ApiBody({ type: CreateMessageDto })
-  async sendMessage(@Body() sendMessageDto: CreateMessageDto): Promise<void> {
-    const { channel, message } = sendMessageDto;
-    await this.conversationsService.sendMessage(channel, message);
+  async sendMessage(@Body() sendMessageDto: CreateMessageDto) {
+    await this.pusherService.trigger('chat', 'message', {
+      username: sendMessageDto.username,
+      message: sendMessageDto.message,
+    });
+    return [];
   }
 }
