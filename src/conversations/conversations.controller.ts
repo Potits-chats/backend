@@ -1,78 +1,28 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
+import { PusherService } from '../pusher/pusher.service';
+import { ApiBody, ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { CreateMessageDto } from './dto/create-message.dto';
 import { ConversationsService } from './conversations.service';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('conversations')
 @Controller('conversations')
 export class ConversationsController {
-  constructor(private readonly conversationsService: ConversationsService) {}
+  constructor(
+    private readonly pusherService: PusherService,
+    private conversationsService: ConversationsService,
+  ) {}
 
-  // @UseGuards(AuthorizationGuard)
-  // @ApiBearerAuth()
-  @ApiOperation({ summary: 'Créer une conversation' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        utilisateurId: { type: 'number' },
-        associationId: { type: 'number' },
-      },
-    },
-  })
-
-  // @UseGuards(AuthorizationGuard)
-  @ApiOperation({ summary: 'Créer un message' })
-  @ApiOperation({ summary: 'Créer un message' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        contenu: { type: 'string' },
-        utilisateursId: { type: 'number' },
-        associationId: { type: 'number', nullable: true },
-        conversationsId: { type: 'number', nullable: true }, // Rendu optionnel ici
-      },
-    },
-  })
-  @Post('messages')
-  async createMessage(
-    @Body()
-    messageDto: {
-      contenu: string;
-      utilisateursId: number;
-      associationId?: number;
-      conversationsId?: number;
-    },
-  ) {
-    return this.conversationsService.createMessage(
-      messageDto.contenu,
-      messageDto.utilisateursId,
-      messageDto.conversationsId,
-      messageDto.associationId,
-    );
-  }
-
-  @Post('')
-  createConversation(
-    @Body() conversation: { utilisateurId: number; associationId: number },
-  ) {
-    return this.conversationsService.createConversation(
-      conversation.associationId,
-      conversation.utilisateurId,
-    );
-  }
-
-  // @UseGuards(AuthorizationGuard)
-  // @ApiBearerAuth()
-  @Get()
-  findAll() {
-    return this.conversationsService.findAllByUser(1);
-  }
-
-  // @UseGuards(AuthorizationGuard)
-  // @ApiBearerAuth()
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.conversationsService.findOne(+id);
+  @Post()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Send a message' })
+  @ApiResponse({ status: 200, description: 'Message sent successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid request.' })
+  @ApiBody({ type: CreateMessageDto })
+  async sendMessage(@Body() sendMessageDto: CreateMessageDto) {
+    await this.pusherService.trigger('chat', 'message', {
+      username: sendMessageDto.username,
+      message: sendMessageDto.message,
+    });
+    return [];
   }
 }
