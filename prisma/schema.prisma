@@ -95,18 +95,6 @@ model Associations {
   utilisateurs  Utilisateurs[]
 }
 
-model Favoris {
-  id            Int          @id @default(autoincrement())
-  createdAt     DateTime     @default(now())
-  chatId        Int
-  utilisateurId Int
-  chat          Chats        @relation(fields: [chatId], references: [id], map: "Favoris_Chats_FK")
-  utilisateur   Utilisateurs @relation(fields: [utilisateurId], references: [id], map: "Favoris_Utilisateurs_FK")
-
-  @@index([chatId], map: "Favoris_chatId_fkey")
-  @@index([utilisateurId], map: "Favoris_utilisateurId_fkey")
-}
-
 model Messages {
   id              Int           @id @default(autoincrement())
   contenu         String
@@ -128,6 +116,19 @@ model Conversations {
   utilisateur    Utilisateurs @relation(fields: [utilisateursId], references: [id])
   messages       Messages[]
 }
+
+model Favoris {
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now())
+  chatId        Int
+  utilisateurId Int
+  chat          Chats        @relation(fields: [chatId], references: [id], map: "Favoris_Chats_FK")
+  utilisateur   Utilisateurs @relation(fields: [utilisateurId], references: [id], map: "Favoris_Utilisateurs_FK")
+
+  @@index([chatId], map: "Favoris_chatId_fkey")
+  @@index([utilisateurId], map: "Favoris_utilisateurId_fkey")
+}
+
 
 enum Role {
   ADMIN

@@ -1,28 +1,43 @@
-import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
-import { PusherService } from '../pusher/pusher.service';
-import { ApiBody, ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
-import { CreateMessageDto } from './dto/create-message.dto';
+import { Controller, Post, Body, Param, Get, UseGuards } from '@nestjs/common';
 import { ConversationsService } from './conversations.service';
+import { CreateMessageDto } from './dto/create-message.dto';
+import { AuthorizationGuard } from '../authorization/authorization.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { User } from '../utils/user.decorator';
+import { Utilisateurs } from '@prisma/client';
 
-@ApiTags('conversations')
 @Controller('conversations')
 export class ConversationsController {
-  constructor(
-    private readonly pusherService: PusherService,
-    private conversationsService: ConversationsService,
-  ) {}
+  constructor(private readonly conversationsService: ConversationsService) {}
 
-  @Post()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Send a message' })
-  @ApiResponse({ status: 200, description: 'Message sent successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid request.' })
-  @ApiBody({ type: CreateMessageDto })
-  async sendMessage(@Body() sendMessageDto: CreateMessageDto) {
-    await this.pusherService.trigger('chat', 'message', {
-      username: sendMessageDto.username,
-      message: sendMessageDto.message,
-    });
-    return [];
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  @Post(':id/messages')
+  async sendMessage(
+    @Param('id') conversationId: number,
+    @Body() createMessageDto: CreateMessageDto,
+  ) {
+    return this.conversationsService.sendMessage(
+      conversationId,
+      createMessageDto.userId,
+      createMessageDto.content,
+    );
+  }
+
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  @Get(':id/messages')
+  async getMessages(
+    @Param('id') conversationId: number,
+    @User() user: Utilisateurs,
+  ) {
+    return this.conversationsService.getMessages(conversationId, user.id);
+  }
+
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  @Get('user/:userId')
+  async getConversationsForUser(@Param('userId') userId: number) {
+    return this.conversationsService.getConversationsForUser(userId);
   }
 }
