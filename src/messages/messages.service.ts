@@ -14,14 +14,14 @@ export class MessagesService {
     userId: number,
     associationId: number,
     content: string,
-    isUserSender: boolean,
+    user: Utilisateurs,
   ) {
     const message = await this.prisma.messages.create({
       data: {
         contenu: content,
         utilisateursId: userId,
         associationsId: associationId,
-        isUserSender: isUserSender,
+        isUserSender: user.associationId ? false : true,
       },
     });
 

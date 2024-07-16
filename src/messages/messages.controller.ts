@@ -13,12 +13,15 @@ export class MessagesController {
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
   @Post()
-  async sendMessage(@Body() createMessageDto: CreateMessageDto) {
+  async sendMessage(
+    @Body() createMessageDto: CreateMessageDto,
+    @User() user: Utilisateurs,
+  ) {
     return this.messagesService.sendMessage(
-      createMessageDto.userId,
+      createMessageDto.userId ? createMessageDto.userId : user.id,
       createMessageDto.associationId,
       createMessageDto.content,
-      createMessageDto.isUserSender,
+      user,
     );
   }
 
