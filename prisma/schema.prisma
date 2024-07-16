@@ -68,53 +68,46 @@ model Videos {
 }
 
 model Utilisateurs {
-  id            Int             @id @default(autoincrement())
-  email         String          @unique
-  userId        String          @unique
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  userId        String        @unique
+  nom           String        @default("Anonyme")
+  img          String         @default("https://res.cloudinary.com/djzjvzv8f/image/upload/v1626780134/Anonyme")
   associationId Int?
-  conversations Conversations[]
   favoris       Favoris[]
   messages      Messages[]
-  association   Associations?   @relation(fields: [associationId], references: [id], map: "Utilisateurs_Associations_FK")
+  association   Associations? @relation(fields: [associationId], references: [id], map: "Utilisateurs_Associations_FK")
 
   @@index([associationId], map: "Utilisateurs_associationId_fkey")
 }
 
 model Associations {
-  id            Int             @id @default(autoincrement())
-  nom           String          @unique
-  url           String?         @db.VarChar(50)
-  ville         String          @db.VarChar(50)
-  description   String?
-  shortDescription String?
-  tel           String?         @db.VarChar(50)
+  id                  Int            @id @default(autoincrement())
+  nom                 String         @unique
+  url                 String?        @db.VarChar(50)
+  ville               String         @db.VarChar(50)
+  description         String?
+  shortDescription    String?
+  tel                 String?        @db.VarChar(50)
   urlGoogleMapsEmbled String?
-  chats         Chats[]
-  conversations Conversations[]
-  photos        Photos[]
-  utilisateurs  Utilisateurs[]
+  chats               Chats[]
+  photos              Photos[]
+  utilisateurs        Utilisateurs[]
+  messages            Messages[]
 }
 
 model Messages {
-  id              Int           @id @default(autoincrement())
-  contenu         String
-  createdAt       DateTime      @default(now())
-  utilisateursId  Int
-  conversationsId Int
-  auteur          Utilisateurs  @relation(fields: [utilisateursId], references: [id], map: "Messages_Auteur_FK")
-  conversation    Conversations @relation(fields: [conversationsId], references: [id], map: "Messages_Conversation_FK")
-
-  @@index([conversationsId], map: "Index_ConversationId")
-  @@index([utilisateursId], map: "Index_UtilisateursId")
-}
-
-model Conversations {
   id             Int          @id @default(autoincrement())
-  associationsId Int
+  contenu        String
+  createdAt      DateTime     @default(now())
   utilisateursId Int
-  association    Associations @relation(fields: [associationsId], references: [id])
-  utilisateur    Utilisateurs @relation(fields: [utilisateursId], references: [id])
-  messages       Messages[]
+  associationsId Int
+  isUserSender   Boolean      @default(true)
+  utilisateur    Utilisateurs @relation(fields: [utilisateursId], references: [id], map: "Messages_Utilisateur_FK")
+  association    Associations @relation(fields: [associationsId], references: [id], map: "Messages_Association_FK")
+
+  @@index([utilisateursId], map: "Index_UtilisateursId")
+  @@index([associationsId], map: "Index_AssociationsId")
 }
 
 model Favoris {
@@ -128,7 +121,6 @@ model Favoris {
   @@index([chatId], map: "Favoris_chatId_fkey")
   @@index([utilisateurId], map: "Favoris_utilisateurId_fkey")
 }
-
 
 enum Role {
   ADMIN

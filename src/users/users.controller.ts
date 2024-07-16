@@ -1,6 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
+import { AuthorizationGuard } from 'src/authorization/authorization.guard';
+import { Utilisateurs } from '@prisma/client';
+import { User } from 'src/utils/user.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -14,12 +17,22 @@ export class UsersController {
       properties: {
         email: { type: 'string' },
         userId: { type: 'string' },
+        nom: { type: 'string' },
+        img: { type: 'string' },
       },
     },
   })
   @Post()
   create(@Body() createChatDto: any) {
     return this.usersService.create(createChatDto);
+  }
+
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Récupération d'un utilisateur" })
+  @Get('infos')
+  findBySub(@User() user: Utilisateurs) {
+    return user;
   }
 
   @ApiOperation({ summary: 'Récupération de tous les utilisateurs' })

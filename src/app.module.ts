@@ -9,8 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ChatsModule } from './chats/chats.module';
 import { UsersModule } from './users/users.module';
 import { FavorisModule } from './favoris/favoris.module';
-import { ChatGateway } from './chat/chat.gateway';
-import { ConversationsModule } from './conversations/conversations.module';
+import { MessagesModule } from './messages/messages.module';
 import { AssociationsModule } from './associations/associations.module';
 import { PrismaService } from './utils/prisma.service';
 import { ContactModule } from './contact/contact.module';
@@ -34,7 +33,7 @@ import { PusherService } from './pusher/pusher.service';
     ChatsModule,
     UsersModule,
     FavorisModule,
-    ConversationsModule,
+    MessagesModule,
     ContactModule,
     MailerModule.forRoot({
       transport: {
@@ -59,7 +58,6 @@ import { PusherService } from './pusher/pusher.service';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    ChatGateway,
     PrismaService,
     ContactService,
     PusherService,
