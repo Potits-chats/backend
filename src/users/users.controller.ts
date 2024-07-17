@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { AuthorizationGuard } from 'src/authorization/authorization.guard';
+import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { Utilisateurs } from '@prisma/client';
-import { User } from 'src/utils/user.decorator';
+import { User } from '../utils/user.decorator';
 
 @ApiTags('users')
 @Controller('users')

@@ -82,6 +82,7 @@ describe('ChatsController', () => {
           createdAt: undefined,
           updatedAt: undefined,
           chats: [],
+          urlGoogleMapsEmbled: '',
         },
         photos: [
           { id: 1, createdAt: undefined, url: '', chatId: 1, associationId: 1 },
@@ -96,7 +97,14 @@ describe('ChatsController', () => {
   describe('findByFavoris', () => {
     it('should find chats by favoris', async () => {
       const result = [];
-      const user = { id: 1, email: '', userId: '1', associationId: 1 };
+      const user = {
+        id: 1,
+        email: '',
+        userId: '1',
+        associationId: 1,
+        nom: 'test',
+        img: 'https://geekflare.com/fr/wp-content/plugins/wp-user-avatars/wp-user-avatars/assets/images/mystery.jpg',
+      };
       jest.spyOn(service, 'findByFavoris').mockResolvedValue(result);
       expect(await controller.findByFavoris(user)).toBe(result);
     });
