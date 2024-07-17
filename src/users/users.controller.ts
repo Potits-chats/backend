@@ -32,7 +32,11 @@ export class UsersController {
   @ApiOperation({ summary: "Récupération d'un utilisateur" })
   @Get('infos')
   findBySub(@User() user: Utilisateurs) {
-    return user;
+    const userWithAssociationInfo = {
+      ...user,
+      isAssociation: !!user.associationId,
+    };
+    return userWithAssociationInfo;
   }
 
   @ApiOperation({ summary: 'Récupération de tous les utilisateurs' })

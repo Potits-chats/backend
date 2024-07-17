@@ -35,11 +35,8 @@ export class MessagesService {
   }
 
   async getMessages(userId: number, associationId: number) {
-    console.log('🚀 ~ MessagesService ~ getMessages ~ userId:', userId);
-    console.log(
-      '🚀 ~ MessagesService ~ getMessages ~ associationId:',
-      associationId,
-    );
+    console.log('userId:', userId);
+    console.log('associationId:', associationId);
     const messages = await this.prisma.messages.findMany({
       where: { utilisateursId: +userId, associationsId: +associationId },
       orderBy: { createdAt: 'asc' },

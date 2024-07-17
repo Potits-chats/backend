@@ -72,7 +72,7 @@ model Utilisateurs {
   email         String        @unique
   userId        String        @unique
   nom           String        @default("Anonyme")
-  img          String         @default("https://res.cloudinary.com/djzjvzv8f/image/upload/v1626780134/Anonyme")
+  img          String         @default("https://geekflare.com/fr/wp-content/plugins/wp-user-avatars/wp-user-avatars/assets/images/mystery.jpg")
   associationId Int?
   favoris       Favoris[]
   messages      Messages[]
