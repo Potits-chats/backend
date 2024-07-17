@@ -55,6 +55,8 @@ export class UsersService {
       data: {
         email: createUserDto.email,
         userId: createUserDto.userId,
+        nom: createUserDto.nom,
+        img: createUserDto.img,
       },
     });
   }

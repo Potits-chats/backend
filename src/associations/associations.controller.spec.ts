@@ -47,6 +47,7 @@ describe('AssociationsController', () => {
         description: '',
         shortDescription: '',
         tel: '',
+        urlGoogleMapsEmbled: '',
         chats: [],
         photos: [],
       };
@@ -66,6 +67,7 @@ describe('AssociationsController', () => {
         description: '',
         shortDescription: '',
         tel: '',
+        urlGoogleMapsEmbled: '',
       };
       jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(

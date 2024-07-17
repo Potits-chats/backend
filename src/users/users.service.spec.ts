@@ -122,6 +122,8 @@ describe('UsersService', () => {
           id: 0,
           email: '',
           userId: '',
+          nom: 'test',
+          img: 'https://geekflare.com/fr/wp-content/plugins/wp-user-avatars/wp-user-avatars/assets/images/mystery.jpg',
           associationId: 0,
           conversations: [],
           favoris: [],
@@ -141,6 +143,8 @@ describe('UsersService', () => {
         email: 'test@example.com',
         userId: '1',
         associationId: 1,
+        nom: 'test',
+        img: 'https://geekflare.com/fr/wp-content/plugins/wp-user-avatars/wp-user-avatars/assets/images/mystery.jpg',
       };
       const result = { id: 1, ...userDto };
       jest.spyOn(service, 'create').mockResolvedValue(result);
@@ -158,6 +162,8 @@ describe('UsersService', () => {
         email: 'test@example.com',
         userId: '1',
         associationId: 1,
+        nom: 'test',
+        img: 'https://geekflare.com/fr/wp-content/plugins/wp-user-avatars/wp-user-avatars/assets/images/mystery.jpg',
       };
 
       jest.spyOn(service, 'findOneById').mockResolvedValue(expectedUser);

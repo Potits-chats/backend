@@ -21,6 +21,9 @@ export const User = createParamDecorator(
         where: {
           userId: decoded.sub,
         },
+        include: {
+          association: true,
+        },
       });
       return user;
     } catch (error) {

@@ -64,6 +64,7 @@ describe('AssociationsService', () => {
         description: '',
         shortDescription: '',
         tel: '',
+        urlGoogleMapsEmbled: '',
         chats: [],
         photos: [],
       };
@@ -83,6 +84,7 @@ describe('AssociationsService', () => {
           description: '',
           shortDescription: '',
           tel: '',
+          urlGoogleMapsEmbled: '',
           chats: [],
           photos: [],
         },
@@ -102,6 +104,7 @@ describe('AssociationsService', () => {
         description: '',
         shortDescription: '',
         tel: '',
+        urlGoogleMapsEmbled: '',
         chats: [],
         photos: [],
       };

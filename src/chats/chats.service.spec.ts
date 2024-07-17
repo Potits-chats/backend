@@ -71,6 +71,7 @@ describe('ChatsService', () => {
         description: '',
         shortDescription: '',
         tel: '',
+        urlGoogleMapsEmbled: '',
       },
       photos: [
         { id: 1, createdAt: undefined, url: '', chatId: 1, associationId: 1 },
