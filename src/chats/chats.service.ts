@@ -53,7 +53,7 @@ export class ChatsService {
       query.where = {
         ...query.where,
         race: {
-          contains: race,
+          contains: race.replace('-', ' '),
           mode: 'insensitive',
         },
       };
