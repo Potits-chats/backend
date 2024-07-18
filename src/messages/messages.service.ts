@@ -64,7 +64,15 @@ export class MessagesService {
           },
         },
       });
-      return utilisateurs;
+      const sortedUtilisateurs = utilisateurs.sort((a, b) => {
+        const dateA =
+          a.messages.length > 0 ? a.messages[0].createdAt.getTime() : 0;
+        const dateB =
+          b.messages.length > 0 ? b.messages[0].createdAt.getTime() : 0;
+        return dateB - dateA;
+      });
+
+      return sortedUtilisateurs;
     } else {
       const associations = await this.prisma.associations.findMany({
         where: {
@@ -84,7 +92,15 @@ export class MessagesService {
         },
       });
 
-      return associations;
+      const sortedAssociations = associations.sort((a, b) => {
+        const dateA =
+          a.messages.length > 0 ? a.messages[0].createdAt.getTime() : 0;
+        const dateB =
+          b.messages.length > 0 ? b.messages[0].createdAt.getTime() : 0;
+        return dateB - dateA;
+      });
+
+      return sortedAssociations;
     }
   }
 }
