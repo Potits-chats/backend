@@ -6,13 +6,19 @@ import {
   Put,
   Body,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { AssociationsService } from './associations.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
 import { AuthorizationGuard } from '../authorization/authorization.guard';
-import { UpdateAssociationDto } from './dto/associations.dto';
+import {
+  CreateAssociationDto,
+  UpdateAssociationDto,
+} from './dto/associations.dto';
+import { Utilisateurs } from '@prisma/client';
+import { User } from '../utils/user.decorator';
 
 @ApiTags('associations')
 @Controller('associations')
@@ -29,6 +35,14 @@ export class AssociationsController {
   @Get()
   findAll() {
     return this.associationsService.findAll();
+  }
+
+  @ApiOperation({ summary: "Création d'une association" })
+  @Post()
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  create(@User() user: Utilisateurs, @Body() createAsso: CreateAssociationDto) {
+    return this.associationsService.create(createAsso, user);
   }
 
   @Put(':id')

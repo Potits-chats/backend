@@ -50,6 +50,7 @@ describe('AssociationsController', () => {
         urlGoogleMapsEmbled: '',
         chats: [],
         photos: [],
+        isVisible: true,
       };
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
 
@@ -68,6 +69,7 @@ describe('AssociationsController', () => {
         shortDescription: '',
         tel: '',
         urlGoogleMapsEmbled: '',
+        isVisible: true,
       };
       jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(

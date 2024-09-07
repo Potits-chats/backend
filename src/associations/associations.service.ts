@@ -1,14 +1,25 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../utils/prisma.service';
-import { UpdateAssociationDto } from './dto/associations.dto';
+import {
+  CreateAssociationDto,
+  UpdateAssociationDto,
+} from './dto/associations.dto';
+import { WebhookService } from '../utils/webhook.service';
+import { Utilisateurs } from '@prisma/client';
 
 @Injectable()
 export class AssociationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly webhookService: WebhookService,
+  ) {}
   private readonly logger = new Logger(AssociationsService.name);
 
   async findAll() {
     const associations = await this.prisma.associations.findMany({
+      where: {
+        isVisible: true,
+      },
       include: {
         chats: true,
         photos: true,
@@ -24,6 +35,7 @@ export class AssociationsService {
     const association = await this.prisma.associations.findUnique({
       where: {
         id: id,
+        isVisible: true,
       },
       include: {
         photos: true,
@@ -52,6 +64,38 @@ export class AssociationsService {
       },
     });
     return associations;
+  }
+
+  async create(createAssoDto: CreateAssociationDto, user: Utilisateurs) {
+    const association = await this.prisma.associations.create({
+      data: {
+        nom: createAssoDto.nom,
+        url: createAssoDto.url,
+        ville: createAssoDto.ville,
+        description: createAssoDto.description,
+        shortDescription: createAssoDto.shortDescription,
+        urlGoogleMapsEmbled: createAssoDto.urlGoogleMapsEmbled,
+        tel: createAssoDto.tel,
+        isVisible: false,
+      },
+    });
+
+    await this.prisma.utilisateurs.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        association: {
+          connect: {
+            id: association.id,
+          },
+        },
+      },
+    });
+    const message = `Une nouvelle association a été créée: **${association.nom}** à **${association.ville}**.\n\nDescription courte : ${association.shortDescription}.\n\nLien : ${association.url}.\n\n Par : ${user.id} ${user.nom} ${user.email}.\n\nPour valider l'association, Merci de vérifier les informations et de la rendre visible.`;
+    await this.webhookService.sendMessage(message);
+
+    return association;
   }
 
   remove(id: number) {
