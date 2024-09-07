@@ -5,6 +5,7 @@ import {
   UpdateAssociationDto,
 } from './dto/associations.dto';
 import { WebhookService } from '../utils/webhook.service';
+import { Utilisateurs } from '@prisma/client';
 
 @Injectable()
 export class AssociationsService {
@@ -65,7 +66,7 @@ export class AssociationsService {
     return associations;
   }
 
-  async create(createAssoDto: CreateAssociationDto) {
+  async create(createAssoDto: CreateAssociationDto, user: Utilisateurs) {
     const association = await this.prisma.associations.create({
       data: {
         nom: createAssoDto.nom,
@@ -73,11 +74,25 @@ export class AssociationsService {
         ville: createAssoDto.ville,
         description: createAssoDto.description,
         shortDescription: createAssoDto.shortDescription,
+        urlGoogleMapsEmbled: createAssoDto.urlGoogleMapsEmbled,
         tel: createAssoDto.tel,
         isVisible: false,
       },
     });
-    const message = `Une nouvelle association a été créée: **${association.nom}** à **${association.ville}**.\n\nDescription courte : ${association.shortDescription}.\n\nLien : ${association.url}.\n\n Merci de vérifier les informations et de la rendre visible.`;
+
+    await this.prisma.utilisateurs.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        association: {
+          connect: {
+            id: association.id,
+          },
+        },
+      },
+    });
+    const message = `Une nouvelle association a été créée: **${association.nom}** à **${association.ville}**.\n\nDescription courte : ${association.shortDescription}.\n\nLien : ${association.url}.\n\n Par : ${user.id} ${user.nom} ${user.email}.\n\nPour valider l'association, Merci de vérifier les informations et de la rendre visible.`;
     await this.webhookService.sendMessage(message);
 
     return association;

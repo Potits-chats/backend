@@ -17,6 +17,8 @@ import {
   CreateAssociationDto,
   UpdateAssociationDto,
 } from './dto/associations.dto';
+import { Utilisateurs } from '@prisma/client';
+import { User } from 'src/utils/user.decorator';
 
 @ApiTags('associations')
 @Controller('associations')
@@ -39,8 +41,8 @@ export class AssociationsController {
   @Post()
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  create(@Body() createAsso: CreateAssociationDto) {
-    return this.associationsService.create(createAsso);
+  create(@User() user: Utilisateurs, @Body() createAsso: CreateAssociationDto) {
+    return this.associationsService.create(createAsso, user);
   }
 
   @Put(':id')
