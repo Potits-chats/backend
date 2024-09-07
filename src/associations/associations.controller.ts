@@ -18,7 +18,7 @@ import {
   UpdateAssociationDto,
 } from './dto/associations.dto';
 import { Utilisateurs } from '@prisma/client';
-import { User } from 'src/utils/user.decorator';
+import { User } from '../utils/user.decorator';
 
 @ApiTags('associations')
 @Controller('associations')
