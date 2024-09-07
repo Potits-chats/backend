@@ -18,6 +18,7 @@ import { ContactService } from './contact/contact.service';
 import { ContactController } from './contact/contact.controller';
 import { PusherService } from './pusher/pusher.service';
 import { WebhookService } from './utils/webhook.service';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { WebhookService } from './utils/webhook.service';
       },
     }),
     AssociationsModule,
+    FilesModule,
   ],
   controllers: [AppController, ContactController],
   providers: [
