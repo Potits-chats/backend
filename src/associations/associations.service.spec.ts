@@ -18,6 +18,7 @@ describe('AssociationsService', () => {
               description: '',
               shortDescription: '',
               tel: '',
+              urlGoogleMapsEmbled: '',
               chats: [],
               photos: [],
             }),
@@ -30,6 +31,7 @@ describe('AssociationsService', () => {
                 description: '',
                 shortDescription: '',
                 tel: '',
+                urlGoogleMapsEmbled: '',
                 chats: [],
                 photos: [],
               },
@@ -42,6 +44,7 @@ describe('AssociationsService', () => {
               description: '',
               shortDescription: '',
               tel: '',
+              urlGoogleMapsEmbled: '',
               chats: [],
               photos: [],
             }),
@@ -67,6 +70,7 @@ describe('AssociationsService', () => {
         urlGoogleMapsEmbled: '',
         chats: [],
         photos: [],
+        isVisible: false,
       };
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
       expect(await service.findOne(1)).toBe(result);
@@ -87,6 +91,7 @@ describe('AssociationsService', () => {
           urlGoogleMapsEmbled: '',
           chats: [],
           photos: [],
+          isVisible: false,
         },
       ];
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
@@ -107,6 +112,7 @@ describe('AssociationsService', () => {
         urlGoogleMapsEmbled: '',
         chats: [],
         photos: [],
+        isVisible: true,
       };
       jest.spyOn(service, 'update').mockResolvedValue(result);
 

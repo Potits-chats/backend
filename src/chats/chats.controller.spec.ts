@@ -83,6 +83,7 @@ describe('ChatsController', () => {
           updatedAt: undefined,
           chats: [],
           urlGoogleMapsEmbled: '',
+          isVisible: false,
         },
         photos: [
           { id: 1, createdAt: undefined, url: '', chatId: 1, associationId: 1 },
@@ -153,6 +154,8 @@ describe('ChatsController', () => {
           createdAt: undefined,
           updatedAt: undefined,
           chats: [],
+          urlGoogleMapsEmbled: '',
+          isVisible: false,
         },
         photos: [
           { id: 1, createdAt: undefined, url: '', chatId: 1, associationId: 1 },
