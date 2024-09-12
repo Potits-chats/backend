@@ -7,7 +7,7 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 
-export class UpdateAssociationDto {
+export class CreateAssociationDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -37,4 +37,12 @@ export class UpdateAssociationDto {
   @IsPhoneNumber('FR')
   @IsOptional()
   tel?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsUrl()
+  @IsOptional()
+  urlGoogleMapsEmbled?: string;
 }
+
+export class UpdateAssociationDto extends CreateAssociationDto {}

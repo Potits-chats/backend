@@ -17,6 +17,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { ContactService } from './contact/contact.service';
 import { ContactController } from './contact/contact.controller';
 import { PusherService } from './pusher/pusher.service';
+import { WebhookService } from './utils/webhook.service';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -49,6 +51,7 @@ import { PusherService } from './pusher/pusher.service';
       },
     }),
     AssociationsModule,
+    FilesModule,
   ],
   controllers: [AppController, ContactController],
   providers: [
@@ -61,6 +64,7 @@ import { PusherService } from './pusher/pusher.service';
     PrismaService,
     ContactService,
     PusherService,
+    WebhookService,
   ],
 })
 export class AppModule implements NestModule {

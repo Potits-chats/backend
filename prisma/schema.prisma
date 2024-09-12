@@ -94,6 +94,7 @@ model Associations {
   photos              Photos[]
   utilisateurs        Utilisateurs[]
   messages            Messages[]
+  isVisible           Boolean       @default(false)
 }
 
 model Messages {
