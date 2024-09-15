@@ -8,11 +8,19 @@ import {
   ParseFilePipe,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
+import { AuthorizationGuard } from '../authorization/authorization.guard';
 
 @ApiTags('Files')
 @Controller('files')
@@ -59,9 +67,11 @@ export class FilesController {
     return this.filesService.getFileUrl(fileName);
   }
 
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete file' })
-  @Delete(':fileName')
-  deleteFile(@Param('fileName') fileName: string) {
-    return this.filesService.deleteFile(fileName);
+  @Delete(':type/:fileName')
+  deleteFile(@Param('type') type: string, @Param('fileName') fileName: string) {
+    return this.filesService.deleteFile(type, fileName);
   }
 }

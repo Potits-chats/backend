@@ -139,7 +139,7 @@ export class ChatsService {
     delete updateChatDto['photos'];
     delete updateChatDto['userId'];
     delete updateChatDto['isFavori'];
-    const chats = await this.prisma.chats.update({
+    const chat = await this.prisma.chats.update({
       where: {
         id: id,
       },
@@ -147,7 +147,7 @@ export class ChatsService {
         ...updateChatDto,
       },
     });
-    return chats;
+    return chat;
   }
 
   remove(id: number) {

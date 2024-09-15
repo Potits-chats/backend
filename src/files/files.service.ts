@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import {
   S3Client,
   PutObjectCommand,
@@ -9,10 +8,12 @@ import {
 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { PrismaService } from '../utils/prisma.service';
 
 @Injectable()
 export class FilesService {
-  prisma = new PrismaClient();
+  constructor(private prisma: PrismaService) {}
+
   private readonly logger = new Logger(FilesService.name);
   AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
   s3 = new S3Client({
@@ -75,14 +76,19 @@ export class FilesService {
     }
   }
 
-  async deleteFile(fileName: string): Promise<void> {
+  async deleteFile(type: string, fileName: string): Promise<void> {
     const command = new DeleteObjectCommand({
       Bucket: this.AWS_BUCKET_NAME,
-      Key: `public/${fileName}`,
+      Key: `public/${type}/${fileName}`,
     });
 
     try {
       await this.s3.send(command);
+      await this.prisma.photos.deleteMany({
+        where: {
+          url: type + '/' + fileName,
+        },
+      });
     } catch (e) {
       this.logger.error(`Failed to delete file: ${e.message}`);
       throw new Error(`Failed to delete file: ${e.message}`);
