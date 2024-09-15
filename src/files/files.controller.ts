@@ -20,9 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
-import { AuthorizationGuard } from 'src/authorization/authorization.guard';
-import { PermissionsEnum } from 'src/authorization/permissions';
-import { PermissionsGuard } from 'src/authorization/permissions.guard';
+import { AuthorizationGuard } from '../authorization/authorization.guard';
 
 @ApiTags('Files')
 @Controller('files')
@@ -71,10 +69,9 @@ export class FilesController {
 
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  @UseGuards(PermissionsGuard([PermissionsEnum.CREATE_CHAT]))
   @ApiOperation({ summary: 'Delete file' })
-  @Delete(':fileName')
-  deleteFile(@Param('fileName') fileName: string) {
-    return this.filesService.deleteFile(fileName);
+  @Delete(':type/:fileName')
+  deleteFile(@Param('type') type: string, @Param('fileName') fileName: string) {
+    return this.filesService.deleteFile(type, fileName);
   }
 }
