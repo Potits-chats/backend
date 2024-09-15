@@ -7,6 +7,7 @@ import {
   Put,
   Body,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import {
@@ -20,16 +21,18 @@ import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
 import { User } from '../utils/user.decorator';
+import { CreateCatDto } from './dto/chats.dto';
 
 @ApiTags('chats')
 @Controller('chats')
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}
 
-  // @Post()
-  // create(@Body() createChatDto: CreateChatDto) {
-  //   return this.chatsService.create(createChatDto);
-  // }
+  @ApiOperation({ summary: "Création d'un chat" })
+  @Post()
+  create(@Body() createCatDto: CreateCatDto) {
+    return this.chatsService.create(createCatDto);
+  }
 
   @ApiOperation({ summary: 'Récupération de tous les chats' })
   @ApiQuery({

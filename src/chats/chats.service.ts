@@ -2,10 +2,16 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Chats, Utilisateurs } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { PrismaService } from '../utils/prisma.service';
+import { CreateCatDto } from './dto/chats.dto';
+import { WebhookService } from '../utils/webhook.service';
 
 @Injectable()
 export class ChatsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly webhookService: WebhookService,
+  ) {}
+
   private readonly logger = new Logger(ChatsService.name);
 
   async findAll(options: {
@@ -148,6 +154,18 @@ export class ChatsService {
       },
     });
     return chats;
+  }
+
+  async create(createChatDto: CreateCatDto) {
+    const chat = await this.prisma.chats.create({
+      data: createChatDto,
+    });
+
+    this.logger.log('Chat créer : ', chat);
+    this.webhookService.sendMessage(
+      'Un nouveau chat a été ajouté ! ' + chat.id,
+    );
+    return chat;
   }
 
   remove(id: number) {
