@@ -7,6 +7,7 @@ import {
   Put,
   Body,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import {
@@ -20,16 +21,28 @@ import { AuthorizationGuard } from '../authorization/authorization.guard';
 import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
 import { User } from '../utils/user.decorator';
+import { CreateCatDto } from './dto/chats.dto';
+import { UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('chats')
 @Controller('chats')
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}
 
-  // @Post()
-  // create(@Body() createChatDto: CreateChatDto) {
-  //   return this.chatsService.create(createChatDto);
-  // }
+  @ApiOperation({ summary: "Création d'un chat" })
+  @Post()
+  @UseInterceptors(FilesInterceptor('photos'))
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  create(
+    @UploadedFiles() photos: Express.Multer.File[],
+    @Body('chat') chatData: string,
+    @User() user: Utilisateurs,
+  ) {
+    const createChatDto: CreateCatDto = JSON.parse(chatData);
+    return this.chatsService.create(createChatDto, photos, user);
+  }
 
   @ApiOperation({ summary: 'Récupération de tous les chats' })
   @ApiQuery({
@@ -103,11 +116,17 @@ export class ChatsController {
 
   @ApiOperation({ summary: "Mise à jour d'un chat par son id" })
   @Put(':id')
+  @UseInterceptors(FilesInterceptor('photos'))
   @UseGuards(PermissionsGuard([PermissionsEnum.UPDATE_CHAT]))
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateChat: Chats) {
-    return this.chatsService.update(+id, updateChat);
+  update(
+    @UploadedFiles() photos: Express.Multer.File[],
+    @Param('id') id: string,
+    @Body('chat') updateChat: string,
+  ) {
+    const updateChatDto: Chats = JSON.parse(updateChat);
+    return this.chatsService.update(+id, updateChatDto, photos);
   }
 
   @ApiOperation({ summary: "Suppression d'un chat par son id" })

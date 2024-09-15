@@ -2,10 +2,18 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Chats, Utilisateurs } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { PrismaService } from '../utils/prisma.service';
+import { CreateCatDto } from './dto/chats.dto';
+import { WebhookService } from '../utils/webhook.service';
+import { FilesService } from '../files/files.service';
 
 @Injectable()
 export class ChatsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly webhookService: WebhookService,
+    private filesService: FilesService,
+  ) {}
+
   private readonly logger = new Logger(ChatsService.name);
 
   async findAll(options: {
@@ -132,7 +140,34 @@ export class ChatsService {
     return truncatedChats;
   }
 
-  async update(id: number, updateChatDto: Chats) {
+  async update(
+    id: number,
+    updateChatDto: Chats,
+    photos: Express.Multer.File[],
+  ) {
+    const photoUrls = photos
+      ? await Promise.all(
+          photos.map((photo) => this.filesService.uploadFile(photo)),
+        )
+      : [];
+
+    const updateData: any = {
+      ...updateChatDto,
+    };
+
+    if (photoUrls.length > 0) {
+      updateData.photos = {
+        create: photoUrls.map((url) => ({ url })),
+      };
+    }
+
+    await this.prisma.photos.createMany({
+      data: photoUrls.map((url) => ({
+        url,
+        chatId: updateChatDto.id,
+      })),
+    });
+
     delete updateChatDto.id;
     delete updateChatDto.associationId;
     delete updateChatDto['association'];
@@ -148,6 +183,40 @@ export class ChatsService {
       },
     });
     return chats;
+  }
+
+  async create(
+    createChatDto: CreateCatDto,
+    photos: Express.Multer.File[],
+    user: Utilisateurs,
+  ) {
+    const photoUrls = await Promise.all(
+      photos.map((photo) => this.filesService.uploadFile(photo)),
+    );
+
+    const chat = await this.prisma.chats.create({
+      data: {
+        ...createChatDto,
+        association: {
+          connect: {
+            id: user.associationId,
+          },
+        },
+      },
+    });
+
+    await this.prisma.photos.createMany({
+      data: photoUrls.map((url) => ({
+        url,
+        chatId: chat.id,
+      })),
+    });
+
+    this.logger.log('Chat créer : ', chat);
+    this.webhookService.sendMessage(
+      'Un nouveau chat a été ajouté ! ' + chat.id + ' ' + chat.nom,
+    );
+    return chat;
   }
 
   remove(id: number) {
