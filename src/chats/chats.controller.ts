@@ -43,6 +43,7 @@ export class ChatsController {
     const createChatDto: CreateCatDto = JSON.parse(chatData);
     return this.chatsService.create(createChatDto, photos, user);
   }
+
   @ApiOperation({ summary: 'Récupération de tous les chats' })
   @ApiQuery({
     name: 'associationId',
@@ -115,15 +116,16 @@ export class ChatsController {
 
   @ApiOperation({ summary: "Mise à jour d'un chat par son id" })
   @Put(':id')
+  @UseInterceptors(FilesInterceptor('photos'))
   @UseGuards(PermissionsGuard([PermissionsEnum.UPDATE_CHAT]))
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
   update(
-    @Param('id') id: string,
     @UploadedFiles() photos: Express.Multer.File[],
-    @Body('chat') chatData: string,
+    @Param('id') id: string,
+    @Body('chat') updateChat: string,
   ) {
-    const updateChatDto: Chats = JSON.parse(chatData);
+    const updateChatDto: Chats = JSON.parse(updateChat);
     return this.chatsService.update(+id, updateChatDto, photos);
   }
 

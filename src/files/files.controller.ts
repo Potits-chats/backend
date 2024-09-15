@@ -8,11 +8,21 @@ import {
   ParseFilePipe,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
+import { AuthorizationGuard } from 'src/authorization/authorization.guard';
+import { PermissionsEnum } from 'src/authorization/permissions';
+import { PermissionsGuard } from 'src/authorization/permissions.guard';
 
 @ApiTags('Files')
 @Controller('files')
@@ -59,6 +69,9 @@ export class FilesController {
     return this.filesService.getFileUrl(fileName);
   }
 
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  @UseGuards(PermissionsGuard([PermissionsEnum.CREATE_CHAT]))
   @ApiOperation({ summary: 'Delete file' })
   @Delete(':fileName')
   deleteFile(@Param('fileName') fileName: string) {

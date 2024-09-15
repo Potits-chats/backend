@@ -161,6 +161,13 @@ export class ChatsService {
       };
     }
 
+    await this.prisma.photos.createMany({
+      data: photoUrls.map((url) => ({
+        url,
+        chatId: updateChatDto.id,
+      })),
+    });
+
     delete updateChatDto.id;
     delete updateChatDto.associationId;
     delete updateChatDto['association'];
@@ -207,7 +214,7 @@ export class ChatsService {
 
     this.logger.log('Chat créer : ', chat);
     this.webhookService.sendMessage(
-      'Un nouveau chat a été ajouté ! ' + chat.id,
+      'Un nouveau chat a été ajouté ! ' + chat.id + ' ' + chat.nom,
     );
     return chat;
   }
