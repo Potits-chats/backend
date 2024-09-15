@@ -19,6 +19,7 @@ import { ContactController } from './contact/contact.controller';
 import { PusherService } from './pusher/pusher.service';
 import { WebhookService } from './utils/webhook.service';
 import { FilesModule } from './files/files.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -52,6 +53,9 @@ import { FilesModule } from './files/files.module';
     }),
     AssociationsModule,
     FilesModule,
+    MulterModule.register({
+      dest: './uploads', // Temporary storage
+    }),
   ],
   controllers: [AppController, ContactController],
   providers: [

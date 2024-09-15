@@ -22,6 +22,8 @@ import { PermissionsGuard } from '../authorization/permissions.guard';
 import { PermissionsEnum } from '../authorization/permissions';
 import { User } from '../utils/user.decorator';
 import { CreateCatDto } from './dto/chats.dto';
+import { UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('chats')
 @Controller('chats')
@@ -30,10 +32,17 @@ export class ChatsController {
 
   @ApiOperation({ summary: "Création d'un chat" })
   @Post()
-  create(@Body() createCatDto: CreateCatDto) {
-    return this.chatsService.create(createCatDto);
+  @UseInterceptors(FilesInterceptor('photos'))
+  @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
+  create(
+    @UploadedFiles() photos: Express.Multer.File[],
+    @Body('chat') chatData: string,
+    @User() user: Utilisateurs,
+  ) {
+    const createChatDto: CreateCatDto = JSON.parse(chatData);
+    return this.chatsService.create(createChatDto, photos, user);
   }
-
   @ApiOperation({ summary: 'Récupération de tous les chats' })
   @ApiQuery({
     name: 'associationId',
@@ -109,8 +118,13 @@ export class ChatsController {
   @UseGuards(PermissionsGuard([PermissionsEnum.UPDATE_CHAT]))
   @UseGuards(AuthorizationGuard)
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateChat: Chats) {
-    return this.chatsService.update(+id, updateChat);
+  update(
+    @Param('id') id: string,
+    @UploadedFiles() photos: Express.Multer.File[],
+    @Body('chat') chatData: string,
+  ) {
+    const updateChatDto: Chats = JSON.parse(chatData);
+    return this.chatsService.update(+id, updateChatDto, photos);
   }
 
   @ApiOperation({ summary: "Suppression d'un chat par son id" })
